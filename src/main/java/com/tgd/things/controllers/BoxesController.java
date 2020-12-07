@@ -1,0 +1,71 @@
+package com.tgd.things.controllers;
+
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.tgd.things.beans.db.Thing;
+import com.tgd.things.service.BoxService;
+import com.tgd.things.service.ThingService;
+import com.tgd.things.utils.WebRequestUtils;
+
+@Controller
+@ComponentScan
+public class BoxesController {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(BoxesController.class);
+
+	@Autowired
+	BoxService boxService;
+
+	@Autowired
+	ThingService thingService;
+
+	@RequestMapping(value = { "/garage" }, method = RequestMethod.GET)
+	public String getThings(Model model, HttpServletRequest request) {
+		LOGGER.debug("## GET Maincontroller: things");
+
+		model.addAttribute("hey", "you");
+
+		model.addAttribute("context", WebRequestUtils.getContext());
+		request.getSession().setAttribute("contextpath", request.getContextPath());
+
+		model.addAttribute("boxes", boxService.getAllBoxes());
+
+		return BaseController.BOXES_PAGE;
+	}
+
+	@RequestMapping(value = { "/box/{boxId}" }, method = RequestMethod.GET)
+	public String openBox(Model model, HttpServletRequest request, @PathVariable String boxId) {
+		LOGGER.debug("## GET BoxesController: openBox");
+		LOGGER.debug("boxId: {}", boxId);
+
+		model.addAttribute("context", WebRequestUtils.getContext());
+
+		List<Thing> things = thingService.getBoxThings(Long.parseLong(boxId));
+		LOGGER.debug("things size: {}", things.size());
+		model.addAttribute("searchedThings", things);
+
+		LOGGER.debug("111 --" + boxService.getById(boxId).get());
+
+		if (boxService.getById(boxId).get().getView() == null
+				|| boxService.getById(boxId).get().getView().trim().equals("")) {
+			LOGGER.debug("Box View: SIN VISTA {}", boxService.getById(boxId).get().getView());
+			return BaseController.THINGS_PAGE;
+		} else {
+			LOGGER.debug("Box View: {}", boxService.getById(boxId).get().getView());
+			return "boxes/" + boxService.getById(boxId).get().getView();
+		}
+
+	}
+
+}

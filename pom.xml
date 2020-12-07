@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.3.5.RELEASE</version> <!-- 2.2.1.RELEASE 2.4.0-SNAPSHOT -->
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+
+	<groupId>com.tgd</groupId>
+	<artifactId>things-webapp</artifactId>
+	<version>0.1-SNAPSHOT</version>
+	<name>things-webapp</name>
+	<description>Manage everything</description>
+
+	<packaging>war</packaging>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<spring-cloud.version>Hoxton.BUILD-SNAPSHOT</spring-cloud.version>
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<id>dev</id>
+				<properties.src>DEV</properties.src>
+				<db_platform>h2</db_platform>
+				<db_url>jdbc:h2:mem:things;DB_CLOSE_DELAY=-1</db_url>
+				<db_username>sa</db_username>
+				<db_password></db_password>
+				<driver_class_name>org.h2.Driver</driver_class_name>
+				<db_dialect>org.hibernate.dialect.H2Dialect</db_dialect>
+				<contextPath>/</contextPath>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>test</id>
+			<properties>
+				<id>test</id>
+				<properties.src>TEST</properties.src>
+				<db_platform>h2</db_platform>
+				<db_url>jdbc:h2:./db/things;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE</db_url>
+				<db_username>sa</db_username>
+				<db_password></db_password>
+				<driver_class_name>org.h2.Driver</driver_class_name>
+				<db_dialect>org.hibernate.dialect.H2Dialect</db_dialect>
+				<contextPath>/</contextPath>
+			</properties>
+			<dependencies>
+				<!-- Monitoring with JavaMelody -->
+				<dependency>
+					<groupId>net.bull.javamelody</groupId>
+					<artifactId>javamelody-spring-boot-starter</artifactId>
+					<version>1.86.0</version>
+				</dependency>
+			</dependencies>
+		</profile>
+
+		<profile>
+			<id>pro</id>
+			<properties>
+				<properties.src>PRO</properties.src>
+				<db_url>jdbc:postgresql://localhost:5432/things?sslmode=disable</db_url>
+				<!-- ?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true&amp;ssl=false -->
+				<db_username>test</db_username>
+				<db_password>t3st</db_password>
+				<driver_class_name>org.postgresql.Driver</driver_class_name>
+				<db_dialect>org.hibernate.dialect.PostgreSQLDialect</db_dialect>
+				<contextPath>/geotag</contextPath>
+			</properties>
+
+			<dependencies>
+				<!-- Monitoring with JavaMelody -->
+				<dependency>
+					<groupId>net.bull.javamelody</groupId>
+					<artifactId>javamelody-spring-boot-starter</artifactId>
+					<version>1.86.0</version>
+				</dependency>
+			</dependencies>
+
+		</profile>
+	</profiles>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-rest</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-freemarker</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+		</dependency>
+		<!-- dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-oauth2-resource-server</artifactId> 
+			</dependency -->
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-gcp-starter</artifactId>
+		</dependency>
+		<!-- dependency> <groupId>org.springframework.cloud</groupId> <artifactId>spring-cloud-gcp-starter-storage</artifactId> 
+			</dependency -->
+		<!-- dependency> <groupId>org.springframework.data</groupId> <artifactId>spring-data-rest-hal-browser</artifactId> 
+			</dependency -->
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-core</artifactId>
+		</dependency>
+		<!-- dependency> <groupId>org.springframework.shell</groupId> <artifactId>spring-shell-starter</artifactId> 
+			<version>2.0.0.RELEASE</version> </dependency -->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Tomcat -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- Databases -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+			<version>1.4.199</version>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.2.0</version>
+			<!-- scope>runtime</scope -->
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- dependency> <groupId>org.springframework.security</groupId> <artifactId>spring-security-test</artifactId> 
+			<scope>test</scope> </dependency -->
+
+
+
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>spring-snapshots</id>
+			<name>Spring Snapshots</name>
+			<url>https://repo.spring.io/snapshot</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-snapshots</id>
+			<name>Spring Snapshots</name>
+			<url>https://repo.spring.io/snapshot</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+</project>
