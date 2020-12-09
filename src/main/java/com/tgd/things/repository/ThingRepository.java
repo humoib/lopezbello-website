@@ -18,7 +18,7 @@ public interface ThingRepository extends CrudRepository<Thing, Long> {
 	@Query("SELECT t FROM Thing t ")
 	List<Thing> getFirstTwentyThings();
 
-	@Query("SELECT t FROM Thing t WHERE  BOX_BOX_ID = ?1")
+	@Query("SELECT t FROM Thing t WHERE BOX_BOX_ID = ?1")
 	List<Thing> getBoxThings(Long id);
 
 	@Query(value = "(SELECT t.THI_ID as id, t.THI_SUMMARY as summary, t.THI_CREATED as created FROM THING t "
@@ -29,4 +29,10 @@ public interface ThingRepository extends CrudRepository<Thing, Long> {
 			+ " WHERE target.SOURCETHINGID= ?1 )", nativeQuery = true)
 	public List<ThingPojo2> findRelatedById(Long thingId);
 
+	@Query(value = "SELECT t.THI_ID as id, t.THI_SUMMARY as summary, t.THI_CREATED as created FROM THING t "
+			+ "WHERE THI_SUMMARY LIKE '%?1%'", nativeQuery = true)
+	public List<ThingPojo2> searchByText(Long thingId);
+	
+	List<Thing> findBySummaryContainingIgnoreCase(String text);
+	
 }

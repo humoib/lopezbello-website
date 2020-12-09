@@ -59,6 +59,10 @@ public class ThingService {
 		return thingRepository.getFirstTwentyThings();
 	}
 
+	public List<Thing> searchThings(String text) {
+		return thingRepository.findBySummaryContainingIgnoreCase(text);
+	}
+
 	public List<Thing> getBoxThings(Long id) {
 		return thingRepository.getBoxThings(id);
 	}
@@ -106,11 +110,6 @@ public class ThingService {
 		// TODO: other fields
 		//
 		return thingRepository.save(thing);
-	}
-
-	public Object searchThings(String searchString) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	// Thing Types

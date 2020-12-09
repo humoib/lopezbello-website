@@ -56,12 +56,7 @@
 				<contextPath>/</contextPath>
 			</properties>
 			<dependencies>
-				<!-- Monitoring with JavaMelody -->
-				<dependency>
-					<groupId>net.bull.javamelody</groupId>
-					<artifactId>javamelody-spring-boot-starter</artifactId>
-					<version>1.86.0</version>
-				</dependency>
+
 			</dependencies>
 		</profile>
 
@@ -69,22 +64,17 @@
 			<id>pro</id>
 			<properties>
 				<properties.src>PRO</properties.src>
-				<db_url>jdbc:postgresql://localhost:5432/things?sslmode=disable</db_url>
+				<db_url>jdbc:postgresql://localhost:5432/thingsdb?sslmode=disable</db_url>
 				<!-- ?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true&amp;ssl=false -->
-				<db_username>test</db_username>
-				<db_password>t3st</db_password>
+				<db_username>things_user</db_username>
+				<db_password>yA7xV8wI2pR7eG5jA3kH2nZ7bS5eS4xP</db_password>
 				<driver_class_name>org.postgresql.Driver</driver_class_name>
 				<db_dialect>org.hibernate.dialect.PostgreSQLDialect</db_dialect>
-				<contextPath>/geotag</contextPath>
+				<contextPath>/</contextPath>
 			</properties>
 
 			<dependencies>
-				<!-- Monitoring with JavaMelody -->
-				<dependency>
-					<groupId>net.bull.javamelody</groupId>
-					<artifactId>javamelody-spring-boot-starter</artifactId>
-					<version>1.86.0</version>
-				</dependency>
+
 			</dependencies>
 
 		</profile>
@@ -117,12 +107,12 @@
 		</dependency>
 		<!-- dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-oauth2-resource-server</artifactId> 
 			</dependency -->
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -188,7 +178,12 @@
 		<!-- dependency> <groupId>org.springframework.security</groupId> <artifactId>spring-security-test</artifactId> 
 			<scope>test</scope> </dependency -->
 
-
+		<!-- Monitoring with JavaMelody -->
+		<dependency>
+			<groupId>net.bull.javamelody</groupId>
+			<artifactId>javamelody-spring-boot-starter</artifactId>
+			<version>1.86.0</version>
+		</dependency>
 
 	</dependencies>
 

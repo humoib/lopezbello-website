@@ -63,15 +63,13 @@ public class ThingsController extends BaseController {
 		return THINGS_PAGE;
 	}
 
-	@RequestMapping(value = { "/search" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/search" }, method = RequestMethod.POST)
 	public String searchPlaces(Model model, HttpServletRequest request, HttpServletResponse response) {
-		LOGGER.debug("POST ThingsController: things");
+		LOGGER.debug("POST ThingsController: search things");
 
-		// model.addAttribute("context", WebRequestUtils.getContext());
-
-		model.addAttribute("search", request.getParameter("string"));
-
-		String searchString = request.getParameter("string");
+		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("search", request.getParameter("search"));
+		String searchString = request.getParameter("search");
 		model.addAttribute("searchedThings", thingService.searchThings(searchString));
 
 		return THINGS_PAGE;
