@@ -28,10 +28,9 @@
                   <thead>
                     <tr>
                       <th>ID</th>
-                      <th>User</th>
-                      <th>Date</th>
-                      <th>Status</th>
-                      <th>Reason</th>
+                      <th>Thing Type</th>
+                      <th>Description</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -43,8 +42,21 @@
 	                      <td>${thingtype.id}</td>
 	                      <td>${thingtype.name}</td>
 	                      <td><#if thingtype.description??>${thingtype.description}</#if></td>
-	                      <td><span class="tag tag-success">Approved</span></td>
-	                      <td></td>
+	                      <td>
+	                      	<!-- Call to action buttons -->
+                            <ul class="list-inline m-0">
+                            	<!--li class="list-inline-item">
+                                	<button class="btn btn-primary btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-table"></i></button>
+                            	</li-->
+                            	<li class="list-inline-item">
+                                    <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                            	</li>
+                            	<li class="list-inline-item">
+                            		<button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
+                                </li>
+                            </ul>
+	                      	
+	                      </td>
 	                    </tr>
 	                    
 	                  </#list>

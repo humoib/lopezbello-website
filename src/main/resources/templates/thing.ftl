@@ -2,23 +2,27 @@
 
 <@c.page title="">
 
-
 	<script>
 	
 	function relates(){
 		$.ajax({
    			type: "PUT",
 		    contentType: "application/json; charset=utf-8",
-    		url: "${context}/rest/api/1/thing/relate",
+    		url: "${baseUrl!""}${context}/rest/api/1/thing/relate",
     		data: '{"source": "'+$("#thingId").val()+'", "target":"'+$("#relate option:selected").val()+'"}',
-    		dataType: "json",
-    		success: function (msg) {
-        		console.log('Success');
+    		dataType: "text",
+    		success: function (returnData) {
+        		console.debug('SUCCESS - related');
     		},
-   			error: function (err){
-        		console.log('Error');
+    		error: function (xhr, textStatus, errorThrown) { 
+    			console.error("ERROR: "+ xhr.status + ': ' + xhr.statusText +' '+ textStatus +' '+ errorThrown);
     		}
+ 
 		});
+	}
+	
+	function loadRelations(){
+	
 	}
 	
 	</script>
@@ -26,7 +30,7 @@
 	
  	<div class="row">
  	
-		<div class="col-2">
+		<div class="col-2" id="relations">
 		
 			<#if !operation??>
 			
@@ -46,7 +50,7 @@
 			  		</#list>	
 			  	</#if>
 			  		
-			</div>
+				</div>
 			</#if>	
 		</div>
 		
@@ -124,13 +128,14 @@
 				      			>
 				    	</div>
 					</div>
-					 			
+					
+					<!-- FIELDS -->
 		 			<#if fields??>
 			 			<#list fields as field >
 							<!-- <p><b>field.name:</b> value</p> -->
 							
 							<#switch field.type>
-							 <#case "text">
+							<#case "text">
     							<div class="form-group row">
 							    	<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field.name}</label>
 							    	<div class="col-sm-10">
@@ -144,7 +149,7 @@
 								</div>
 							<#break>
 
-							 <#case "text-large">
+							<#case "text-large">
     							<div class="form-group row">
     								<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field.name}</label>
     								<div class="col-sm-10">
@@ -156,7 +161,49 @@
 								</div>
 							<#break>
 
+							<#case "select">
+    							<div class="form-group row">
+    								<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field.name}</label>
+    								<div class="col-sm-10">
+    										<div class='input-group date' id='datetimepicker5'>
+               <input type='text' class="form-control" />
+               <span class="input-group-addon">
+               <span class="glyphicon glyphicon-calendar"></span>
+               </span>
+            </div>
+	    									<textarea class="form-control form-control-sm" 
+	    										id="${field.id}" name="cf_${field.id}" 
+	    										rows="3"><#if field.value?? >${field.value}</#if></textarea>
+         				    		</div>
+         				    		
+         				    		<script type="text/javascript">
+         $(function () {
+             $('#datetimepicker5').datetimepicker({
+                 defaultDate: "11/1/2013",
+                 disabledDates: [
+                     moment("12/25/2013"),
+                     new Date(2013, 11 - 1, 21),
+                     "11/22/2013 00:53"
+                 ]
+             });
+         });
+      </script>
+									
+								</div>
+							<#break>
 							
+							<#case "datetime">
+    							<div class="form-group row">
+    								<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field.name}</label>
+    								<div class="col-sm-10">
+	    									<textarea class="form-control form-control-sm" 
+	    										id="${field.id}" name="cf_${field.id}" 
+	    										rows="3"><#if field.value?? >${field.value}</#if></textarea>
+         				    		</div>
+									
+								</div>
+							<#break>
+														
 							</#switch>
 					  	
 					  	</#list>
