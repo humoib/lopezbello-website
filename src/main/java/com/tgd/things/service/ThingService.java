@@ -86,7 +86,7 @@ public class ThingService {
 
 		Integer lastKey = boxRepository.getLastKey(thingPojo.getBoxId());
 		if (lastKey == null) {
-			lastKey = 1;
+			lastKey = 0;
 		} else {
 			lastKey++;
 		}
@@ -135,15 +135,17 @@ public class ThingService {
 	}
 
 	public int relateThings(String source, String target) {
-		// thingTypeRepository.findAllById(arg0)
+		LOGGER.debug("## relateThings: {} --> {}", source, target);
 
 		List relations = thingRelationRepository.findBySourceAndTargetIds(Long.parseLong(source),
 				Long.parseLong(target));
 
-		LOGGER.debug(relations.toString());
-		if (relations.size() > 0) {
+		LOGGER.trace("Relations: {}", relations.toString());
+		if (!relations.isEmpty()) {
+			LOGGER.trace("Relations: 111");
 			LOGGER.warn("EXISTS!");
 		} else {
+			LOGGER.trace("Relations: 222");
 			thingRelationRepository.insertRelation(Long.parseLong(source), Long.parseLong(target));
 			return 0;
 		}

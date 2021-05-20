@@ -10,3 +10,6 @@ target
 
 .classpath
 .project
+
+src/main/resources/*.json
+

@@ -57,6 +57,7 @@ public class AdminController {
 		LOGGER.trace("## ADMIN THING-TYPES");
 
 		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("adminpage", "Thing Types");
 
 		model.addAttribute("thingtypes", thingService.getAllThingTypes());
 

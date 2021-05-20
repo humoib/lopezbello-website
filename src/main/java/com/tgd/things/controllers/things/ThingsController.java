@@ -29,6 +29,7 @@ import com.tgd.things.managers.FieldsManager;
 import com.tgd.things.service.BoxService;
 import com.tgd.things.service.CustomFieldsService;
 import com.tgd.things.service.ThingService;
+import com.tgd.things.system.ThingsSystem;
 import com.tgd.things.utils.WebRequestUtils;
 
 import org.springframework.web.bind.annotation.PathVariable;
@@ -79,6 +80,7 @@ public class ThingsController extends BaseController {
 	public String showThing(Model model, HttpServletRequest request, @PathVariable String id) {
 		LOGGER.debug("## GET Maincontroller: showThing");
 
+		model.addAttribute("baseUrl", ThingsSystem.getBaseUrl());
 		model.addAttribute("context", WebRequestUtils.getContext());
 
 		// TODO: review
@@ -121,6 +123,22 @@ public class ThingsController extends BaseController {
 		// fields.putAll(FieldsManager.getViewFields(thing.get().getThingType()));
 
 		return THING_PAGE;
+	}
+
+	@RequestMapping(value = { "/thing/relationsBox/{id}" }, method = RequestMethod.GET)
+	public String getRelationsDivContent(Model model, HttpServletRequest request, HttpServletResponse response,
+			@PathVariable String id) {
+		LOGGER.debug("## GET ThingsController: relations box");
+
+		// Relations
+		Optional<Thing> a = thingService.getThing(Long.parseLong(id));
+
+		LOGGER.debug("thingService.getThing(Long.parseLong(id)).get()): " + a.get());
+		model.addAttribute("thingsRelated",
+				thingService.getAllRelatedThings(thingService.getThing(Long.parseLong(id)).get()));
+		model.addAttribute("thingsToRelate", thingService.getAllThings());
+
+		return "thingRelations";
 	}
 
 	/**

@@ -31,6 +31,7 @@
 			</activation>
 			<properties>
 				<id>dev</id>
+				<env>DEV</env>
 				<properties.src>DEV</properties.src>
 				<db_platform>h2</db_platform>
 				<db_url>jdbc:h2:mem:things;DB_CLOSE_DELAY=-1</db_url>
@@ -47,15 +48,25 @@
 			<properties>
 				<id>test</id>
 				<properties.src>TEST</properties.src>
-				<db_platform>h2</db_platform>
-				<db_url>jdbc:h2:./db/things;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE</db_url>
-				<db_username>sa</db_username>
-				<db_password></db_password>
-				<driver_class_name>org.h2.Driver</driver_class_name>
-				<db_dialect>org.hibernate.dialect.H2Dialect</db_dialect>
-				<contextPath>/</contextPath>
+				<db_platform>test</db_platform>
+				<db_url>jdbc:postgresql://localhost:5432/thingsdb-test?sslmode=disable</db_url>
+				<db_username>test</db_username>
+				<db_password>t3st</db_password>
+				<driver_class_name>org.postgresql.Driver</driver_class_name>
+				<db_dialect>org.hibernate.dialect.PostgreSQLDialect</db_dialect>
+				<baseUrl>
+					http://localhost:8080/
+				</baseUrl>
+				<contextPath>/things</contextPath>
 			</properties>
 			<dependencies>
+
+				<dependency>
+					<groupId>org.postgresql</groupId>
+					<artifactId>postgresql</artifactId>
+					<version>42.2.0</version>
+					<scope>runtime</scope>
+				</dependency>
 
 			</dependencies>
 		</profile>
@@ -74,6 +85,13 @@
 			</properties>
 
 			<dependencies>
+
+				<dependency>
+					<groupId>org.postgresql</groupId>
+					<artifactId>postgresql</artifactId>
+					<version>42.2.0</version>
+					<scope>runtime</scope>
+				</dependency>
 
 			</dependencies>
 
@@ -159,10 +177,10 @@
 			<version>1.4.199</version>
 		</dependency>
 		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>42.2.0</version>
-			<!-- scope>runtime</scope -->
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>2.4.0</version>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
@@ -175,14 +193,28 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- dependency> <groupId>org.springframework.security</groupId> <artifactId>spring-security-test</artifactId> 
-			<scope>test</scope> </dependency -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
 
 		<!-- Monitoring with JavaMelody -->
 		<dependency>
 			<groupId>net.bull.javamelody</groupId>
 			<artifactId>javamelody-spring-boot-starter</artifactId>
 			<version>1.86.0</version>
+		</dependency>
+
+		<!-- Google Storage -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-gcp-starter-storage</artifactId>
+			<version>1.1.0.M3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-file</artifactId>
 		</dependency>
 
 	</dependencies>

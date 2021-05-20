@@ -165,30 +165,32 @@
     							<div class="form-group row">
     								<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field.name}</label>
     								<div class="col-sm-10">
-    										<div class='input-group date' id='datetimepicker5'>
-               <input type='text' class="form-control" />
-               <span class="input-group-addon">
-               <span class="glyphicon glyphicon-calendar"></span>
-               </span>
-            </div>
-	    									<textarea class="form-control form-control-sm" 
-	    										id="${field.id}" name="cf_${field.id}" 
-	    										rows="3"><#if field.value?? >${field.value}</#if></textarea>
-         				    		</div>
-         				    		
-         				    		<script type="text/javascript">
-         $(function () {
-             $('#datetimepicker5').datetimepicker({
-                 defaultDate: "11/1/2013",
-                 disabledDates: [
-                     moment("12/25/2013"),
-                     new Date(2013, 11 - 1, 21),
-                     "11/22/2013 00:53"
-                 ]
-             });
-         });
-      </script>
-									
+    									<select id="" name="">
+    										<option value="aaa">aaa    									
+    										<option value="bbb">bbb
+    										<option value="ccc">ccc
+    									</select>
+    								</div>									
+								</div>
+							<#break>
+							
+							<#case "radio">
+    							<div class="form-group row">
+    								<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field.name}</label>
+    								<div class="col-sm-10">
+    									<div class="form-check">
+											<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+											<label class="form-check-label" for="flexRadioDefault1">
+    											Default radio
+											</label>
+										</div>
+										<div class="form-check">
+											<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+											<label class="form-check-label" for="flexRadioDefault2">
+													Default checked radio
+											</label>
+										</div>
+    								</div>									
 								</div>
 							<#break>
 							
@@ -196,12 +198,31 @@
     							<div class="form-group row">
     								<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field.name}</label>
     								<div class="col-sm-10">
-	    									<textarea class="form-control form-control-sm" 
-	    										id="${field.id}" name="cf_${field.id}" 
-	    										rows="3"><#if field.value?? >${field.value}</#if></textarea>
+	    									<div class='input-group date' id='datetimepicker5'>
+    										
+               									<input type='text' class="form-control" />
+               									<span class="input-group-addon">
+              									 <span class="glyphicon glyphicon-calendar"></span>
+             									  </span>
+            								</div>
+            								
+            								<script type="text/javascript">
+         $(function () {
+             $('#datetimepicker5').datetimepicker({
+                 defaultDate: "11/1/2013",
+                 disabledDates: [
+                     new Date(2013, 11 - 1, 21),
+                     "11/22/2013 00:53"
+                 ]
+             });
+         });
+      </script>
+      
          				    		</div>
 									
 								</div>
+								
+								
 							<#break>
 														
 							</#switch>
@@ -344,7 +365,7 @@
 			
 			<ul class="nav nav-tabs">
 			  <li class="nav-item">
-   				 <a class="nav-link active" href="#">Active</a>
+   				 <a class="nav-link active" href="#">Comments</a>
   				</li>
   			<li class="nav-item dropdown">
     			<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>

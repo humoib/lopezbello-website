@@ -5,12 +5,14 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.tgd.things.config.ThingsAppProperties;
 import com.tgd.things.service.ThingService;
 import com.tgd.things.utils.WebRequestUtils;
 
@@ -22,6 +24,9 @@ public class MainController {
 
 	private static final String PATH = "/error";
 
+	@Autowired
+	private ApplicationContext applicationContext;
+	
 	@Autowired
 	ThingService thingService;
 
@@ -45,8 +50,20 @@ public class MainController {
 	}
 
 	@RequestMapping(value = "/hello", method = RequestMethod.GET)
-	public String hello(HttpServletRequest request) {
+	public String hello(Model model, HttpServletRequest request) {
 		LOGGER.trace("## HELO ");
+
+
+		ThingsAppProperties config = applicationContext.getBean(ThingsAppProperties.class);
+		config.printVariable();
+		
+		//ThingsAppProperties config = new ThingsAppProperties();
+
+		LOGGER.debug("ConfigurationProperties.getBaseUrl(): {}", config.getBaseUrl());
+		LOGGER.debug("ConfigurationProperties.getValor(): {}", config.getValor());
+		
+		model.addAttribute("baseUrl", config.getBaseUrl());
+		model.addAttribute("valor", config.getValor());
 
 		return "hello";
 	}

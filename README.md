@@ -16,6 +16,7 @@ Manage everyThing with all the flexibility
 
 ### Garage management ###
 
+export GOOGLE_APPLICATION_CREDENTIALS=/Users/hmora/workspace_personal/things/src/main/resources/midyear-freedom-298509-ce216e5095cd.json
 
 DEV
   mvn -o -Pdev clean spring-boot:run

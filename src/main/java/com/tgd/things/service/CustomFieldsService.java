@@ -35,6 +35,11 @@ public class CustomFieldsService {
 	@Autowired
 	protected CustomFieldValueRepository customFieldValueRepository;
 
+	/**
+	 * 
+	 * @param thingType
+	 * @return
+	 */
 	public Iterable<CustomField> getCustomFields(ThingType thingType) {
 		return customFieldRepository.findAll();
 	}

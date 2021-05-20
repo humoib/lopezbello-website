@@ -37,7 +37,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		// https://dzone.com/articles/add-login-to-your-spring-boot-app-in-10-mins
 
-		http.httpBasic().and().authorizeRequests().antMatchers("/resources/**", "/admin/h2-console/**").permitAll()
+		http.httpBasic().and().authorizeRequests().antMatchers("/resources/**", "/admin/h2-console/**", "/monitoring/**").permitAll()
 				.anyRequest().authenticated().and().formLogin()
 				// .loginPage("/login")
 				.permitAll().and().logout().permitAll(); // .and().antMatcher("/admin/h2-console/**");

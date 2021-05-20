@@ -6,7 +6,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.tgd.things.beans.db.Thing;
+import com.tgd.things.plugins.PhotoServicePlugin;
 import com.tgd.things.service.BoxService;
+import com.tgd.things.service.Initializer;
 import com.tgd.things.service.ThingService;
 import com.tgd.things.utils.WebRequestUtils;
 
@@ -29,6 +33,15 @@ public class BoxesController {
 
 	@Autowired
 	ThingService thingService;
+
+	@Value("gs://${gcs-resource-test-bucket}/my-file.txt")
+	private Resource gcsFile;
+
+	@Value("gs://${gcs-resource-test-bucket}/foo/")
+	private Resource gcsRoot;
+
+	@Value("${valor}")
+	private String valor;
 
 	@RequestMapping(value = { "/garage" }, method = RequestMethod.GET)
 	public String getThings(Model model, HttpServletRequest request) {
@@ -56,6 +69,23 @@ public class BoxesController {
 		model.addAttribute("searchedThings", things);
 
 		LOGGER.debug("111 --" + boxService.getById(boxId).get());
+
+		// TDDO : plugin
+		if (boxService.getById(boxId).get().getKey().equals("PHOTO")) {
+			LOGGER.debug("Llamando a PhotoServicePlugin...");
+
+			LOGGER.debug("HELLO gcsRoot: {}", gcsRoot);
+
+			// Initializer initilizer = new Initializer(someInitialValue,
+			// anotherManagedValue)
+			// ClassNotManagedBySpring classNotManagedBySpring = nitializer.initClass();
+
+			PhotoServicePlugin photoServicePlugin = new PhotoServicePlugin(gcsRoot, gcsFile);
+			String content = photoServicePlugin.getAlbumsHtml();
+
+			model.addAttribute("content", content);
+
+		}
 
 		if (boxService.getById(boxId).get().getView() == null
 				|| boxService.getById(boxId).get().getView().trim().equals("")) {
