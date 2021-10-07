@@ -135,7 +135,7 @@ public class ThingService {
 	}
 
 	public int relateThings(String source, String target) {
-		LOGGER.debug("## relateThings: {} --> {}", source, target);
+		LOGGER.debug("## relateThings: SOURCE: {} --> TARGET: {}", source, target);
 
 		List relations = thingRelationRepository.findBySourceAndTargetIds(Long.parseLong(source),
 				Long.parseLong(target));

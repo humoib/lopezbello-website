@@ -1,6 +1,7 @@
 package com.tgd.things.beans.db;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -40,6 +41,9 @@ public class Thing {
 
 	@ManyToOne(optional = false)
 	private ThingType thingType;
+
+	//@OneToMany(cascade = CascadeType.ALL)
+	//private List<ThingComment> thingComment;
 
 	public Thing() {
 	}

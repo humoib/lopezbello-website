@@ -14,34 +14,32 @@
 <title>${title?html}</title>
 
 <link rel="canonical"
-	href="https://getbootstrap.com/docs/4.5/examples/navbar-fixed/">
+	href="https://getbootstrap.com/docs/4.0/examples/navbar-fixed/">
 
 <!-- Bootstrap core CSS -->
 <link
-	href="https://getbootstrap.com/docs/4.5/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
-	crossorigin="anonymous">
+	href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
 
 <!-- Favicons -->
 <link rel="apple-touch-icon"
-	href="https://getbootstrap.com/docs/4.5/assets/img/favicons/apple-touch-icon.png"
+	href="https://getbootstrap.com/docs/4.0/assets/img/favicons/apple-touch-icon.png"
 	sizes="180x180">
 <link rel="icon"
-	href="https://getbootstrap.com/docs/4.5/assets/img/favicons/favicon-32x32.png"
+	href="https://getbootstrap.com/docs/4.0/assets/img/favicons/favicon-32x32.png"
 	sizes="32x32" type="image/png">
 <link rel="icon"
-	href="https://getbootstrap.com/docs/4.5/assets/img/favicons/favicon-16x16.png"
+	href="https://getbootstrap.com/docs/4.0/assets/img/favicons/favicon-16x16.png"
 	sizes="16x16" type="image/png">
 <link rel="manifest"
-	href="https://getbootstrap.com/docs/4.5/assets/img/favicons/manifest.json">
+	href="https://getbootstrap.com/docs/4.0/assets/img/favicons/manifest.json">
 <link rel="mask-icon"
-	href="https://getbootstrap.com/docs/4.5/assets/img/favicons/safari-pinned-tab.svg"
+	href="https://getbootstrap.com/docs/4.0/assets/img/favicons/safari-pinned-tab.svg"
 	color="#563d7c">
 <link rel="icon"
-	href="https://getbootstrap.com/docs/4.5/assets/img/favicons/favicon.ico">
+	href="https://getbootstrap.com/docs/4.0/assets/img/favicons/favicon.ico">
 <meta name="msapplication-config"
-	content="https://getbootstrap.com/docs/4.5/assets/img/favicons/browserconfig.xml">
+	content="https://getbootstrap.com/docs/4.0/assets/img/favicons/browserconfig.xml">
 <meta name="theme-color" content="#563d7c">
 
 <style>

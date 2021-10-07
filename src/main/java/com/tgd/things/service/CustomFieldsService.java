@@ -135,7 +135,7 @@ public class CustomFieldsService {
 				value.setThing(thingRepository.findById(myThing.getId()).get());
 
 				LOGGER.debug("222");
-				LOGGER.debug(" -- " + toUpdateField.getId());
+				LOGGER.debug(" -- toUpdateField.getId(): " + toUpdateField.getId());
 				LOGGER.debug("--- " + customFieldRepository.findById((long) 1));
 				LOGGER.debug("333 " + customFieldRepository.findById(Long.parseLong(toUpdateField.getId())).get() + "  "
 						+ customFieldRepository.findById(Long.parseLong(toUpdateField.getId())).get().getClass());

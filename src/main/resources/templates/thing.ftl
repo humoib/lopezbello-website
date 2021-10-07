@@ -5,6 +5,9 @@
 	<script>
 	
 	function relates(){
+	
+		console.log("#thingId:"+$("#thingId").val());
+		
 		$.ajax({
    			type: "PUT",
 		    contentType: "application/json; charset=utf-8",
@@ -31,27 +34,7 @@
  	<div class="row">
  	
 		<div class="col-2" id="relations">
-		
-			<#if !operation??>
-			
-				<div class="list-group">
-  				<a href="#" class="list-group-item list-group-item-action active">
-    				Relations
-    				
-    				<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#relations-modal">
-  						Add
-					</button>
-    				
-  				</a>
-  				
-  				<#if thingsRelated??>
-			  		<#list thingsRelated as thingRelated >
-						<a href="${context}/thing/${thingRelated.id}" class="list-group-item list-group-item-action">${thingRelated.humanKey} ${thingRelated.summary}</a>
-			  		</#list>	
-			  	</#if>
-			  		
-				</div>
-			</#if>	
+			izq
 		</div>
 		
 		<!-- CENTRAL -->
@@ -59,14 +42,16 @@
 
 			<!-- VIEW -->
 			<#if !operation??>
-			
-				<input type="hidden" id="thingId" name="thingId" value="${thing.id}">
-			
+				
+				<#if thing??>
+					<input type="hidden" id="thingId" name="thingId" value="${thing.id}">
+				</#if>
+							
 				<!-- Action Bar--> 
 				<div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
-				    <button type="button" class="btn btn-secondary"
+				    <button type="button" class="btn btn-primary"
 				    	onclick="window.location.href = '${context}/thing/edit/${thing.id}';">Edit</button>
-				    <button type="button" class="btn btn-secondary">Assign</button>
+				    <button type="button" class="btn btn-primary">Assign</button>
 				    <button type="button" class="btn btn-secondary">Attach</button>
 				    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#relations-modal">Relate</button>
 				    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -103,7 +88,28 @@
 						</#if>
 			  		</#list>	
 			  	</#if>
-			  		
+			  	
+			  	<hr/>
+			  	
+			  	<!-- relations -->
+				<#if !operation?? >
+					<#if thing?? >
+  						    					
+    					<button type="button" class="btn-small btn-primary" data-toggle="modal" data-target="#relations-modal">
+  							Add relation
+						</button>
+    	  				
+  						<#if thingsRelated??>
+  							size: ${thingsRelated?size}<br/>
+			 	 			<#list thingsRelated as thingRelated >
+								<a href="${context}/thing/${thingRelated.id}" 
+									class="list-group-item list-group-item-action"
+									>${thingRelated.humanKey} ${thingRelated.summary}</a>
+							</#list>	
+				 		</#if>
+				 		
+					</#if>	
+				</#if>
 			
 			<#elseif (operation=="new"||operation=="edit")>
 			
@@ -165,10 +171,13 @@
     							<div class="form-group row">
     								<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field.name}</label>
     								<div class="col-sm-10">
-    									<select id="" name="">
-    										<option value="aaa">aaa    									
+    									<select id="${field.id}" name="cf_${field.id}">
+    										<option value="">####### <#if field.value?? >${field.value}</#if>
+    										
+    										<option value="aaa" >aaa 
     										<option value="bbb">bbb
     										<option value="ccc">ccc
+    									
     									</select>
     								</div>									
 								</div>
@@ -334,6 +343,12 @@
 			<div class="container">
 			
 			<#if thing?? >
+			
+				<h5>Info</h5>
+					<ul>
+						<li><b>Type:</b> ${thing.thingType.name}
+					</ul>
+			
 				<h5>People</h5>
 					<ul>
 						<li><b>Creator:</b> user
@@ -342,7 +357,6 @@
 					</ul>
 				
 				<h5>Dates</h5>
-			
 					<ul>
 						<#if thing.created??>
 							<li><b>Created:</b> ${thing.created}
@@ -357,38 +371,55 @@
 		</div>
         
 	</div> <!-- FIN primera fila -->
-	  
+	
+	<hr/>
+	
 	<div class="row">
 		<div class="col-12">
 	
 			<#if thing?? >
-			
+				
 			<ul class="nav nav-tabs">
-			  <li class="nav-item">
-   				 <a class="nav-link active" href="#">Comments</a>
-  				</li>
-  			<li class="nav-item dropdown">
-    			<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-   			 <div class="dropdown-menu">
- 			     <a class="dropdown-item" href="#">Action</a>
- 			     <a class="dropdown-item" href="#">Another action</a>
-			      <a class="dropdown-item" href="#">Something else here</a>
- 			     <div class="dropdown-divider"></div>
- 			     <a class="dropdown-item" href="#">Separated link</a>
-  			  </div>
- 			 </li>
- 			 <li class="nav-item">
-  		  <a class="nav-link" href="#">Link</a>
-  			</li>
- 			 <li class="nav-item">
- 			   <a class="nav-link disabled" href="#">Disabled</a>
- 			 </li>
+ 				<li class="nav-item">
+ 					<a class="nav-link active" aria-current="page" href="#comments" data-toggle="tab">Comments</a>
+ 				</li>
+ 				
+				<li class="nav-item">
+					<a class="nav-link" href="#changes" data-toggle="tab">Changes</a>
+				</li>
 			</ul>
-			
+
+			<div class="tab-content">
+        		<div class="tab-pane active" id="comments">
+        
+       		 	<form action="${context}/thing/newComment" method="POST">
+        			<input type="hidden" name="thingId" value="${thingId}">
+		 			
+	        		<div class="form-group">
+    					<textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+    					<button type="submit" class="btn-small btn-primary">Add comment</button>
+  					</div>
+	        	
+  				</form>
+		
+				<#if thingComments?? >
+					<#list thingComments as thingComment >
+					  	<p>On <b>${thingComment.created?datetime}</b>, <b>${thingComment.actor.username}</b> comment: <b>${thingComment.comment}</b></p>
+					</#list>
+				</#if>
+				
+        </div>
+        <div class="tab-pane" id="changes">changes</div>
+    </div>
+    
+    
+
 			</#if>
 	
 		</div>
 	</div>
+	
+	
 	
 	
 	<!-- Modal for relations -->

@@ -20,14 +20,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.view.RedirectView;
+
 import com.tgd.things.beans.CustomFieldReduced;
 import com.tgd.things.beans.CustomFieldValueReduced;
+import com.tgd.things.beans.NewCommentPojo;
 import com.tgd.things.beans.ThingPojo;
 import com.tgd.things.beans.db.Thing;
+import com.tgd.things.beans.db.ThingComment;
 import com.tgd.things.controllers.BaseController;
 import com.tgd.things.managers.FieldsManager;
 import com.tgd.things.service.BoxService;
 import com.tgd.things.service.CustomFieldsService;
+import com.tgd.things.service.ThingCommentService;
 import com.tgd.things.service.ThingService;
 import com.tgd.things.system.ThingsSystem;
 import com.tgd.things.utils.WebRequestUtils;
@@ -45,6 +50,9 @@ public class ThingsController extends BaseController {
 
 	@Autowired
 	ThingService thingService;
+
+	@Autowired
+	ThingCommentService thingCommentService;
 
 	@Autowired
 	CustomFieldsService customFieldsService;
@@ -106,10 +114,20 @@ public class ThingsController extends BaseController {
 		 * (CustomField cf : myFields) { LOGGER.debug("ThingType: {} - cf: {}",
 		 * thing.get().getThingType().getName(), cf.toString());
 		 * 
-		 * CustomFieldReduced cfReduced = new CustomFieldReducedImpl ();
-		 * cfReduced. }
+		 * CustomFieldReduced cfReduced = new CustomFieldReducedImpl (); cfReduced. }
 		 */
 
+		model.addAttribute("thingId", thing.get().getId());
+
+		List<ThingComment> comments = (List<ThingComment>) thingCommentService.getComments(thing.get());
+		if (comments != null) {
+			LOGGER.debug("COMMENTS: size:{}", comments.size());
+			for (ThingComment comment : comments) {
+				LOGGER.debug("Comment ->" + comment.getComment());
+			}
+		}
+
+		model.addAttribute("thingComments", comments);
 		model.addAttribute("fields", fields);
 
 		// Relations
@@ -219,11 +237,9 @@ public class ThingsController extends BaseController {
 		// Locale currentLocale = LocaleContextHolder.getLocale();
 		// LOGGER.info("Locale: {}", currentLocale);
 		/*
-		 * DecimalFormatSymbols otherSymbols = new
-		 * DecimalFormatSymbols(currentLocale);
+		 * DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(currentLocale);
 		 * otherSymbols.setDecimalSeparator(','); DecimalFormat numberFormat =
-		 * (DecimalFormat)
-		 * DecimalFormat.getInstance(LocaleContextHolder.getLocale());
+		 * (DecimalFormat) DecimalFormat.getInstance(LocaleContextHolder.getLocale());
 		 * numberFormat.setDecimalFormatSymbols(otherSymbols);
 		 */
 
@@ -267,8 +283,7 @@ public class ThingsController extends BaseController {
 		model.addAttribute("thingTypeId", thing.get().getThingType().getId());
 
 		/*
-		 * List<Content> contentList =
-		 * thingService.getAllContents(Long.parseLong(id));
+		 * List<Content> contentList = thingService.getAllContents(Long.parseLong(id));
 		 * LOGGER.debug("contents - size: {} - List: {}", contentList.size(),
 		 * contentList); model.addAttribute("contentList", contentList);
 		 */
@@ -336,19 +351,17 @@ public class ThingsController extends BaseController {
 		 * .getAllFieldsFromThingType(thingService.findById(new Long(1))); for
 		 * (CustomFieldReduced field : fields) {
 		 * LOGGER.debug("FIELD ---> id: {} name: {} type: {}", field.getKey(),
-		 * field.getName(), field.getType()); String temp =
-		 * request.getParameter("cf_" + field.getId());
-		 * LOGGER.debug("REQUEST PARAM {} value {}", "cf_" + field.getId(),
-		 * request.getParameter("cf_" + field.getId())); if (temp != "") { int
-		 * ret = customFieldsService.updateValue(editThing, field.getName(),
+		 * field.getName(), field.getType()); String temp = request.getParameter("cf_" +
+		 * field.getId()); LOGGER.debug("REQUEST PARAM {} value {}", "cf_" +
+		 * field.getId(), request.getParameter("cf_" + field.getId())); if (temp != "")
+		 * { int ret = customFieldsService.updateValue(editThing, field.getName(),
 		 * temp); LOGGER.debug("updated " + temp + " - ret:" + ret); } }
 		 */
 
 		model.addAttribute(THING_PAGE, thing);
 
 		/*
-		 * List<Content> contentList =
-		 * thingService.getAllContents(Long.parseLong(id));
+		 * List<Content> contentList = thingService.getAllContents(Long.parseLong(id));
 		 * LOGGER.debug("contents - size: {} - List: {}", contentList.size(),
 		 * contentList); model.addAttribute("contentList", contentList);
 		 */
@@ -360,4 +373,62 @@ public class ThingsController extends BaseController {
 		return THINGS_PAGE;
 	}
 
+	// newComment
+	@RequestMapping(value = { "/thing/newComment" }, method = RequestMethod.POST)
+	public RedirectView addNewComment(ThingPojo thingpojo, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+		LOGGER.debug("## POST ThingsController: add new comment");
+
+		model.addAttribute("context", WebRequestUtils.getContext());
+
+		LOGGER.debug("model -> name: {}", model.getAttribute("name"));
+		LOGGER.debug("req -> name: {}", request.getAttribute("name"));
+
+		// LOGGER.debug("thingpojo: {}", thingpojo.toString());
+
+		// Locale currentLocale = LocaleContextHolder.getLocale();
+		// LOGGER.info("Locale: {}", currentLocale);
+		/*
+		 * DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(currentLocale);
+		 * otherSymbols.setDecimalSeparator(','); DecimalFormat numberFormat =
+		 * (DecimalFormat) DecimalFormat.getInstance(LocaleContextHolder.getLocale());
+		 * numberFormat.setDecimalFormatSymbols(otherSymbols);
+		 */
+
+		Long thingId = Long.parseLong(request.getParameter("thingId"));
+		Optional<Thing> myThing = thingService.getThing(thingId);
+
+		/*
+		 * addThing.setSummary(request.getParameter("summary"));
+		 * addThing.setThingTypeId(Long.parseLong(request.getParameter(
+		 * "thingTypeId"))); addThing.setCreated(new Date());
+		 */
+		LOGGER.debug("myThing: {}", myThing.get().toString());
+
+		LOGGER.debug("new comment: {}", request.getParameter("comment"));
+
+		NewCommentPojo newComment = new NewCommentPojo();
+		newComment.setThingId(thingId);
+		newComment.setComment(request.getParameter("comment"));
+		thingCommentService.saveComment(newComment);
+
+		/*
+		 * 
+		 * Thing thing = thingService.saveThing(addThing); LOGGER.trace("thing: {}",
+		 * thing.toString());
+		 * 
+		 * FieldsManager fieldsManager = new FieldsManager(thingService,
+		 * customFieldsService); Thing myThing =
+		 * fieldsManager.updateFieldValues(request, thing, null, null);
+		 */
+
+		model.addAttribute("thingId", myThing.get().getId());
+		model.addAttribute("thingComments", (List<ThingComment>) thingCommentService.getComments(myThing.get()));
+		model.addAttribute(THING_PAGE, myThing.get());
+
+		// Getting Things List
+		model.addAttribute("searchedThings", thingService.getFirstTwentyThings());
+
+		return new RedirectView(WebRequestUtils.getContext() + "/thing/" + myThing.get().getId());
+	}
 }

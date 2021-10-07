@@ -76,13 +76,13 @@ public final class FieldsManager {
 		List<CustomFieldReduced> fields = customFieldsService
 				.getAllFieldsFromThingType(thingService.findThingTypeById(myThing.getThingType().getId()));
 		for (CustomFieldReduced field : fields) {
-			LOGGER.debug("FIELD ---> id: {} name: {} type: {}", field.getKey(), field.getName(), field.getType());
+			LOGGER.debug("1 FIELD ---> id: {} name: {} type: {}", field.getKey(), field.getName(), field.getType());
 			String temp = request.getParameter("cf_" + field.getId());
-			LOGGER.debug("REQUEST PARAM {} value {}", "cf_" + field.getId(),
+			LOGGER.debug("1 REQUEST PARAM {} value {}", "cf_" + field.getId(),
 					request.getParameter("cf_" + field.getId()));
 			if (temp != "") {
 				int ret = customFieldsService.updateValue(myThing, field.getName(), temp);
-				LOGGER.debug("updated " + temp + " - ret:" + ret);
+				LOGGER.debug("1 updated " + temp + " - ret:" + ret);
 			}
 		}
 		return myThing;
@@ -106,13 +106,13 @@ public final class FieldsManager {
 		List<CustomFieldReduced> fields = customFieldsService
 				.getAllFieldsFromThingType(this.thingService.findThingTypeById(myThing.getThingType().getId()));
 		for (CustomFieldReduced field : fields) {
-			LOGGER.debug("FIELD ---> id: {} name: {} type: {}", field.getKey(), field.getName(), field.getType());
+			LOGGER.debug("2 FIELD ---> id: {} name: {} type: {}", field.getKey(), field.getName(), field.getType());
 			String temp = (String) values.get(field.getName()); // ("cf_" +
 																// field.getId());
-			LOGGER.debug("REQUEST PARAM {} value {}", "cf_" + field.getId(), (String) values.get(field.getName()));
+			LOGGER.debug("2 REQUEST PARAM {} value {}", "cf_" + field.getId(), (String) values.get(field.getName()));
 			if (temp != "") {
 				int ret = customFieldsService.updateValue(myThing, field.getName(), temp);
-				LOGGER.debug("updated " + temp + " - ret:" + ret);
+				LOGGER.debug("2 updated " + temp + " - ret:" + ret);
 			}
 		}
 		return myThing;
