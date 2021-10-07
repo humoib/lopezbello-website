@@ -17,7 +17,7 @@
 	  	<#if boxes??>
 		  	<#list boxes as box >
 			    <tr>
-			      <td><#if box.key?? >${box.key}</#if></td>
+			      <td><#if box.boxKey?? >${box.boxKey}</#if></td>
 			      <td><a href='${context}/box/${box.id}'>${box.name}</a></td>
 			      <td><#if box.colour?? >${box.colour}</#if></td>
 			      <td><#if box.view?? >${box.view}</#if></td>

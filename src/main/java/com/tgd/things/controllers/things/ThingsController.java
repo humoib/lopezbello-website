@@ -2,7 +2,9 @@ package com.tgd.things.controllers.things;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -16,6 +18,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +33,7 @@ import com.tgd.things.beans.NewCommentPojo;
 import com.tgd.things.beans.ThingPojo;
 import com.tgd.things.beans.db.Thing;
 import com.tgd.things.beans.db.ThingComment;
+import com.tgd.things.config.ThingsAppConstants;
 import com.tgd.things.controllers.BaseController;
 import com.tgd.things.managers.FieldsManager;
 import com.tgd.things.service.BoxService;
@@ -35,6 +41,7 @@ import com.tgd.things.service.CustomFieldsService;
 import com.tgd.things.service.ThingCommentService;
 import com.tgd.things.service.ThingService;
 import com.tgd.things.system.ThingsSystem;
+import com.tgd.things.utils.ThingUtils;
 import com.tgd.things.utils.WebRequestUtils;
 
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,17 +64,36 @@ public class ThingsController extends BaseController {
 	@Autowired
 	CustomFieldsService customFieldsService;
 
-	@RequestMapping(value = { "/things" }, method = RequestMethod.GET)
-	public String getThings(Model model, HttpServletRequest request) {
+	@RequestMapping(value = { "/things", "/things/{pageId}" }, method = RequestMethod.GET)
+	public String getThings(Model model, HttpServletRequest request, @PathVariable("pageId") Optional<Integer> pageId) {
 		LOGGER.debug("## GET Maincontroller: things");
 
-		model.addAttribute("hey", "you");
+		Integer page = 0;
+		Pageable pageObject = null;
+
+		if (pageId.isPresent()) {
+			LOGGER.debug("page: {}", pageId.get());
+			page = pageId.get() - 1;
+		} else {
+			page = 0;
+		}
 
 		model.addAttribute("context", WebRequestUtils.getContext());
 		request.getSession().setAttribute("contextpath", request.getContextPath());
 
-		LOGGER.debug("Getting first 20 Things");
-		model.addAttribute("searchedThings", thingService.getFirstTwentyThings());
+		// LOGGER.debug("Getting first 20 Things");
+		// model.addAttribute("searchedThings", thingService.getFirstTwentyThings());
+
+		pageObject = PageRequest.of(page, ThingsAppConstants.DEFAULT_PAGE_SIZE);
+		Page<Thing> allThings = thingService.findAll(pageObject);
+		model.addAttribute("searchedThings", allThings.getContent());
+
+		// pages
+		LOGGER.debug("actualPage: {}", page + 1);
+		model.addAttribute("actualPage", page + 1);
+		LOGGER.debug("allThings -> size: {} / {}", allThings.getTotalElements(), allThings.getTotalPages());
+		LOGGER.debug("totalPages: {}", allThings.getTotalPages());
+		model.addAttribute("totalPages", allThings.getTotalPages());
 
 		return THINGS_PAGE;
 	}
@@ -136,7 +162,16 @@ public class ThingsController extends BaseController {
 		LOGGER.debug("thingService.getThing(Long.parseLong(id)).get()): " + a.get());
 		model.addAttribute("thingsRelated",
 				thingService.getAllRelatedThings(thingService.getThing(Long.parseLong(id)).get()));
-		model.addAttribute("thingsToRelate", thingService.getAllThings());
+
+		List<ThingPojo> thingsToRelate = new ArrayList();
+		Iterable<Thing> allThings = thingService.getAllThings();
+
+		Iterator<Thing> iter = allThings.iterator();
+		while (iter.hasNext()) {
+			thingsToRelate.add(ThingUtils.db2pojoThing(iter.next()));
+		}
+
+		model.addAttribute("thingsToRelate", thingsToRelate);
 
 		// fields.putAll(FieldsManager.getViewFields(thing.get().getThingType()));
 
@@ -280,6 +315,7 @@ public class ThingsController extends BaseController {
 		model.addAttribute(THING_PAGE, thing.get());
 
 		model.addAttribute("boxId", thing.get().getBox().getId());
+		model.addAttribute("thingId", thing.get().getId());
 		model.addAttribute("thingTypeId", thing.get().getThingType().getId());
 
 		/*

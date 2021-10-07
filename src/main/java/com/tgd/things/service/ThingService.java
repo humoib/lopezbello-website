@@ -10,6 +10,8 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.tgd.things.beans.ThingPojo;
@@ -40,10 +42,18 @@ public class ThingService {
 	@Autowired
 	protected ThingRelationRepository thingRelationRepository;
 
+	public Page<Thing> findAll(Pageable pageable) {
+
+		Page<Thing> ret = thingRepository.findAll(pageable);
+		LOGGER.debug("--> " + ret);
+
+		return ret;
+	}
+
 	public String getReadableKey(Thing thing) {
 		Optional<Thing> mything = thingRepository.findById(thing.getId());
 		Optional<Box> mybox = boxRepository.findById(thing.getBox().getId());
-		return mybox.get().getKey() + "-" + mything.get().getKey();
+		return mybox.get().getBoxKey() + "-" + mything.get().getKey();
 	}
 
 	// TODO: Se debe reducir a un objeto más ligero (ThingReduced)

@@ -11,6 +11,8 @@ public class ThingPojo {
 
 	Long id;
 
+	String key;
+	
 	Integer boxId;
 
 	String humanKey;

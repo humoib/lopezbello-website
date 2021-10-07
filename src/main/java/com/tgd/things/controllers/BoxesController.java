@@ -71,7 +71,7 @@ public class BoxesController {
 		LOGGER.debug("111 --" + boxService.getById(boxId).get());
 
 		// TDDO : plugin
-		if (boxService.getById(boxId).get().getKey().equals("PHOTO")) {
+		if (boxService.getById(boxId).get().getBoxKey().equals("PHOTO")) {
 			LOGGER.debug("Llamando a PhotoServicePlugin...");
 
 			LOGGER.debug("HELLO gcsRoot: {}", gcsRoot);

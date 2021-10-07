@@ -1,18 +1,16 @@
 package com.tgd.things.repository;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-import com.tgd.things.beans.ThingPojo;
 import com.tgd.things.beans.ThingPojo2;
 import com.tgd.things.beans.db.Thing;
 
 //import es.excentia.jiracloud.datafieldsapp.controller.MainController;
 
-public interface ThingRepository extends CrudRepository<Thing, Long> {
+public interface ThingRepository extends PagingAndSortingRepository<Thing, Long> {
 
 	// TODO Limit 20
 	@Query("SELECT t FROM Thing t ")

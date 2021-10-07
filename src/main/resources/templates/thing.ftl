@@ -110,6 +110,7 @@
 				 		
 					</#if>	
 				</#if>
+				<!-- end relations -->
 			
 			<#elseif (operation=="new"||operation=="edit")>
 			
@@ -374,47 +375,51 @@
 	
 	<hr/>
 	
-	<div class="row">
-		<div class="col-12">
+	<#if !operation?? || (operation?? && (operation!="new" && operation!="edit")) >
 	
-			<#if thing?? >
-				
-			<ul class="nav nav-tabs">
- 				<li class="nav-item">
- 					<a class="nav-link active" aria-current="page" href="#comments" data-toggle="tab">Comments</a>
- 				</li>
- 				
-				<li class="nav-item">
-					<a class="nav-link" href="#changes" data-toggle="tab">Changes</a>
-				</li>
-			</ul>
-
-			<div class="tab-content">
-        		<div class="tab-pane active" id="comments">
-        
-       		 	<form action="${context}/thing/newComment" method="POST">
-        			<input type="hidden" name="thingId" value="${thingId}">
-		 			
-	        		<div class="form-group">
-    					<textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
-    					<button type="submit" class="btn-small btn-primary">Add comment</button>
-  					</div>
-	        	
-  				</form>
+		<div class="row">
+			<div class="col-12">
 		
-				<#if thingComments?? >
-					<#list thingComments as thingComment >
-					  	<p>On <b>${thingComment.created?datetime}</b>, <b>${thingComment.actor.username}</b> comment: <b>${thingComment.comment}</b></p>
-					</#list>
-				</#if>
-				
-        </div>
-        <div class="tab-pane" id="changes">changes</div>
-    </div>
-    
-    
+				<#if thing?? >
+					
+				<ul class="nav nav-tabs">
+	 				<li class="nav-item">
+	 					<a class="nav-link active" aria-current="page" href="#comments" data-toggle="tab">Comments</a>
+	 				</li>
+	 				
+					<li class="nav-item">
+						<a class="nav-link" href="#changes" data-toggle="tab">Changes</a>
+					</li>
+				</ul>
+	
+				<div class="tab-content">
+	        		<div class="tab-pane active" id="comments">
+	        
+	       		 	<form action="${context}/thing/newComment" method="POST">
+	        			<input type="hidden" name="thingId" value="${thingId}">
+			 			
+		        		<div class="form-group">
+	    					<textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+	    					<button type="submit" class="btn-small btn-primary">Add comment</button>
+	  					</div>
+		        	
+	  				</form>
+			
+					<#if thingComments?? >
+						<#list thingComments as thingComment >
+						  	<p>On <b>${thingComment.created?datetime}</b>, <b>${thingComment.actor.username}</b> comment: <b>${thingComment.comment}</b></p>
+						</#list>
+					</#if>
+					
+		        </div>
+		        <div class="tab-pane" id="changes">changes</div>
+		    </div>
+	    
+	    
 
 			</#if>
+		</#if>
+			
 	
 		</div>
 	</div>
@@ -452,7 +457,7 @@
     			</div>
   			</div>
 		</div>
-	
 	</#if>
+	<!-- fin de MODAL for relations -->
 
 </@c.page>

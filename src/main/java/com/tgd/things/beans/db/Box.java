@@ -21,7 +21,7 @@ public class Box {
 	private Long id;
 
 	@Column(name = "BOX_KEY", length = 10, nullable = false)
-	private String key;
+	private String boxKey;
 
 	@Column(name = "BOX_NAME", length = 500, nullable = false)
 	private String name;
