@@ -72,4 +72,10 @@ public class ThingsAppApplication extends SpringBootServletInitializer {
 			}
 		}
 	}
+
+	@Bean
+	public ProgressBeanPostProcessor progressBeanPostProcessor() {
+		return new ProgressBeanPostProcessor();
+	}
+
 }

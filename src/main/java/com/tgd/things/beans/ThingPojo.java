@@ -11,15 +11,21 @@ public class ThingPojo {
 
 	Long id;
 
-	String key;
-	
+	Integer key;
+
+	String thingKey;
+
 	Integer boxId;
 
 	String humanKey;
 
 	protected String summary;
 
+	protected String description;
+
 	protected Date created;
+
+	protected Date updated;
 
 	Long thingTypeId;
 
@@ -38,6 +44,7 @@ public class ThingPojo {
 		this.id = id;
 		this.summary = summary;
 		this.created = new Date();
+		this.updated = new Date();
 	}
 
 	@Override

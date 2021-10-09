@@ -1,5 +1,6 @@
 package com.tgd.things.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -31,7 +32,7 @@ public class CustomFieldsService {
 
 	@Autowired
 	protected CustomFieldRepository customFieldRepository;
-	
+
 	@Autowired
 	protected CustomFieldValueRepository customFieldValueRepository;
 
@@ -75,7 +76,7 @@ public class CustomFieldsService {
 	 * 
 	 * @return
 	 * 
-	 * 		public List<CustomFieldReduced> getMyRows() { return
+	 *         public List<CustomFieldReduced> getMyRows() { return
 	 *         customFieldRepository.getMyRows(); }
 	 */
 
@@ -154,6 +155,21 @@ public class CustomFieldsService {
 
 		}
 		return 0;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public List<String> getCustomFieldOptions(String fieldName) {
+		LOGGER.debug("## getCustomFieldOptions");
+
+		List<String> values = new ArrayList();
+		values.add("xxxxx");
+		values.add("yyy");
+		values.add("zzz");
+
+		return values;
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.tgd.things.controllers;
 
+import java.lang.management.ManagementFactory;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -26,7 +28,7 @@ public class MainController {
 
 	@Autowired
 	private ApplicationContext applicationContext;
-	
+
 	@Autowired
 	ThingService thingService;
 
@@ -49,19 +51,44 @@ public class MainController {
 		return "index";
 	}
 
+	/**
+	 * 
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/systeminfo", method = RequestMethod.GET)
+	public String systeminfo(Model model, HttpServletRequest request) {
+		LOGGER.trace("## SYSTEM INFO");
+
+		ThingsAppProperties config = applicationContext.getBean(ThingsAppProperties.class);
+		model.addAttribute("baseUrl", config.getBaseUrl());
+
+		// model.addAttribute("thread_count",
+		// ManagementFactory.getThreadMXBean().getThreadCount());
+
+		// Memory
+		model.addAttribute("free_memory", Runtime.getRuntime().freeMemory() / 1024 / 1024); // MB
+		model.addAttribute("total_memory", Runtime.getRuntime().totalMemory() / 1024 / 1024); // MB
+		model.addAttribute("max_memory", Runtime.getRuntime().maxMemory() / 1024 / 1024); // MB
+		
+		model.addAttribute("available_processors",  Runtime.getRuntime().availableProcessors());
+		
+		return "systeminfo";
+	}
+
 	@RequestMapping(value = "/hello", method = RequestMethod.GET)
 	public String hello(Model model, HttpServletRequest request) {
 		LOGGER.trace("## HELO ");
 
-
 		ThingsAppProperties config = applicationContext.getBean(ThingsAppProperties.class);
 		config.printVariable();
-		
-		//ThingsAppProperties config = new ThingsAppProperties();
+
+		// ThingsAppProperties config = new ThingsAppProperties();
 
 		LOGGER.debug("ConfigurationProperties.getBaseUrl(): {}", config.getBaseUrl());
 		LOGGER.debug("ConfigurationProperties.getValor(): {}", config.getValor());
-		
+
 		model.addAttribute("baseUrl", config.getBaseUrl());
 		model.addAttribute("valor", config.getValor());
 
@@ -69,16 +96,15 @@ public class MainController {
 	}
 
 	/*
-	 * @RequestMapping(value = PATH) public String
-	 * handleError(HttpServletRequest request) { Integer statusCode = (Integer)
-	 * request.getAttribute("javax.servlet.error.status_code"); Exception
-	 * exception = (Exception)
-	 * request.getAttribute("javax.servlet.error.exception");
+	 * @RequestMapping(value = PATH) public String handleError(HttpServletRequest
+	 * request) { Integer statusCode = (Integer)
+	 * request.getAttribute("javax.servlet.error.status_code"); Exception exception
+	 * = (Exception) request.getAttribute("javax.servlet.error.exception");
 	 * 
 	 * return String.format(
 	 * "<html><body><h2>Error Page</h2><div>Status code: <b>%s</b></div>" +
-	 * "<div>Exception Message: <b>%s</b></div><body></html>", statusCode,
-	 * exception == null ? "N/A" : exception.getMessage());
+	 * "<div>Exception Message: <b>%s</b></div><body></html>", statusCode, exception
+	 * == null ? "N/A" : exception.getMessage());
 	 * 
 	 * // return "Error handling"; }
 	 */

@@ -1,8 +1,6 @@
 // MAIN.JS
 
 var intervalId = setInterval(function() {
-  console.log("main.js - Every 5s")
-
+  console.log(new Date().getTime() +" ::main.js (5s)")
 }, 5000);
-
 

@@ -34,7 +34,8 @@
  	<div class="row">
  	
 		<div class="col-2" id="relations">
-			izq
+			<h3><a href="${context}/box/${box.id}">${box.name}</a></h3>
+			
 		</div>
 		
 		<!-- CENTRAL -->
@@ -45,6 +46,9 @@
 				
 				<#if thing??>
 					<input type="hidden" id="thingId" name="thingId" value="${thing.id}">
+					
+					<h5><a href='${context}/thing/${thing.id}'>${thing.box.boxKey}-${thing.key}</a> ${thing.summary}</h5>
+				
 				</#if>
 							
 				<!-- Action Bar--> 
@@ -78,8 +82,6 @@
 				<#if thing.thingTypeId??>
 					<p><b>Type:</b> ${thing.thingTypeId}</p>
 			  	</#if>
-				
-				<p><b>Summary:</b> ${thing.summary}</p>
 											
 				<#if fields??>
 			  		<#list fields as field >
@@ -95,12 +97,13 @@
 				<#if !operation?? >
 					<#if thing?? >
   						    					
-    					<button type="button" class="btn-small btn-primary" data-toggle="modal" data-target="#relations-modal">
+    					<button type="button" class="btn-small btn-primary" data-toggle="modal" data-target="#relations-modal"
+    						title="Number: ${thingsRelated?size}">
   							Add relation
 						</button>
     	  				
   						<#if thingsRelated??>
-  							size: ${thingsRelated?size}<br/>
+  							# ${thingsRelated?size}<br/>
 			 	 			<#list thingsRelated as thingRelated >
 								<a href="${context}/thing/${thingRelated.id}" 
 									class="list-group-item list-group-item-action"
@@ -173,13 +176,16 @@
     								<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field.name}</label>
     								<div class="col-sm-10">
     									<select id="${field.id}" name="cf_${field.id}">
-    										<option value="">####### <#if field.value?? >${field.value}</#if>
-    										
-    										<option value="aaa" >aaa 
-    										<option value="bbb">bbb
-    										<option value="ccc">ccc
+    										<option value="">### none ###
+    										    										
+    										<#list options['3'] as option >
+ 												<option value="${option}"
+ 												<#if field.value?? && option==field.value> selected</#if>
+ 												>${option}
+											</#list>	
     									
     									</select>
+    												
     								</div>									
 								</div>
 							<#break>
@@ -360,10 +366,10 @@
 				<h5>Dates</h5>
 					<ul>
 						<#if thing.created??>
-							<li><b>Created:</b> ${thing.created}
+							<li><b>Created:</b> ${thing.created?date}
 						</#if>
 						<#if thing.updated??>
-							<li><b>Updated:</b> ${thing.updated}
+							<li><b>Updated:</b> ${thing.updated?date}
 						</#if>
 					</ul>
 			</#if>
@@ -443,7 +449,7 @@
       				<select class="form-control form-control-sm" id="relate">
       					<#if thingsToRelate??>
       						<#list thingsToRelate as thing >
-      							<option value="${thing.id}">${thing.key} - ${thing.summary}</option>
+      							<option value="${thing.id}">${thing.thingKey} - ${thing.summary}</option>
       						</#list>
       					</#if>
 					</select>

@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -122,9 +123,13 @@ public class ThingsController extends BaseController {
 		// request.getContextPath());
 		// model.addAttribute("context", WebRequestUtils.getContext());
 
+		// thing
 		Optional<Thing> thing = thingService.getThing(Long.parseLong(id));
 		LOGGER.debug("thing: {}", thing.toString());
 		model.addAttribute(THING_PAGE, thing.get());
+
+		// box
+		model.addAttribute("box", thing.get().getBox());
 
 		// Object with fields
 		// HashMap fields = new HashMap();
@@ -156,26 +161,27 @@ public class ThingsController extends BaseController {
 		model.addAttribute("thingComments", comments);
 		model.addAttribute("fields", fields);
 
+		addRelations(model, id);
+
+		// fields.putAll(FieldsManager.getViewFields(thing.get().getThingType()));
+
+		return THING_PAGE;
+	}
+
+	private void addRelations(Model model, String id) {
 		// Relations
 		Optional<Thing> a = thingService.getThing(Long.parseLong(id));
-
 		LOGGER.debug("thingService.getThing(Long.parseLong(id)).get()): " + a.get());
 		model.addAttribute("thingsRelated",
 				thingService.getAllRelatedThings(thingService.getThing(Long.parseLong(id)).get()));
-
-		List<ThingPojo> thingsToRelate = new ArrayList();
+		List<ThingPojo> thingsToRelate = new ArrayList<ThingPojo>();
 		Iterable<Thing> allThings = thingService.getAllThings();
 
 		Iterator<Thing> iter = allThings.iterator();
 		while (iter.hasNext()) {
 			thingsToRelate.add(ThingUtils.db2pojoThing(iter.next()));
 		}
-
 		model.addAttribute("thingsToRelate", thingsToRelate);
-
-		// fields.putAll(FieldsManager.getViewFields(thing.get().getThingType()));
-
-		return THING_PAGE;
 	}
 
 	@RequestMapping(value = { "/thing/relationsBox/{id}" }, method = RequestMethod.GET)
@@ -238,6 +244,9 @@ public class ThingsController extends BaseController {
 		model.addAttribute("boxId", boxId);
 		model.addAttribute("thingTypeId", thingTypeId);
 
+		// box
+		model.addAttribute("box", boxService.getById(boxId).get());
+
 		// Fields
 		LOGGER.trace("Thing Type: {}", thingService.findThingTypeById(Long.parseLong(thingTypeId)));
 		List<CustomFieldReduced> fields = customFieldsService
@@ -249,6 +258,14 @@ public class ThingsController extends BaseController {
 		if (fields != null) {
 			model.addAttribute("fields", fields);
 		}
+
+		// Options
+		// TOOD: tipo 3
+		HashMap options = new HashMap();
+		options.put("3", customFieldsService.getCustomFieldOptions("option"));
+		LOGGER.debug("OPTIONS {}", options);
+		model.addAttribute("options", options);
+
 		return THING_PAGE;
 	}
 
@@ -295,7 +312,13 @@ public class ThingsController extends BaseController {
 		FieldsManager fieldsManager = new FieldsManager(thingService, customFieldsService);
 		Thing myThing = fieldsManager.updateFieldValues(request, thing, null, null);
 
-		model.addAttribute(THING_PAGE, thing);
+		model.addAttribute("thing", thing);
+
+		// box
+		model.addAttribute("box", thing.getBox());
+
+		// no es necesario porque se redirige a la lista
+		// addRelations(model, String.valueOf(thing.getId()));
 
 		// Getting Things List
 		model.addAttribute("searchedThings", thingService.getFirstTwentyThings());
@@ -318,6 +341,9 @@ public class ThingsController extends BaseController {
 		model.addAttribute("thingId", thing.get().getId());
 		model.addAttribute("thingTypeId", thing.get().getThingType().getId());
 
+		// box
+		model.addAttribute("box", thing.get().getBox());
+
 		/*
 		 * List<Content> contentList = thingService.getAllContents(Long.parseLong(id));
 		 * LOGGER.debug("contents - size: {} - List: {}", contentList.size(),
@@ -328,6 +354,13 @@ public class ThingsController extends BaseController {
 		// TODO: ponemos TAREA
 		List<CustomFieldValueReduced> fields = customFieldsService.getAllFieldValuesFromThing(thing.get());
 		model.addAttribute("fields", fields);
+
+		// Options
+		// TOOD: tipo 3
+		HashMap options = new HashMap();
+		options.put("3", customFieldsService.getCustomFieldOptions("option"));
+		LOGGER.debug("OPTIONS {}", options);
+		model.addAttribute("options", options);
 
 		model.addAttribute("operation", "edit");
 
@@ -366,16 +399,31 @@ public class ThingsController extends BaseController {
 		// Creates the POJO object
 		ThingPojo editThing = new ThingPojo();
 		editThing.setId(thing.getId());
+		editThing.setKey(thing.getKey());
 		editThing.setBoxId(thing.getBox().getId().intValue());
 		editThing.setThingTypeId(thing.getThingType().getId());
 		editThing.setSummary(request.getParameter("summary"));
 		editThing.setCreated(thing.getCreated());
 
-		// editThing.setDescription(request.getParameter("description"));
+		editThing.setDescription(request.getParameter("description"));
 
 		Thing thingSaved = thingService.saveThing(editThing);
 		LOGGER.trace("thing: {}", thingSaved.toString());
+		model.addAttribute("thing", thingSaved);
+		model.addAttribute("thingId", thingSaved.getId());
 
+		// box
+		model.addAttribute("box", thingSaved.getBox());
+
+		// relations
+		// LOGGER.trace("thingService.getThing(Long.parseLong(id)).get()): " +
+		// thingSaved);
+		// model.addAttribute("thingsRelated",
+		// thingService.getAllRelatedThings(thingSaved));
+
+		addRelations(model, id);
+
+		// update field values
 		FieldsManager fieldsManager = new FieldsManager(thingService, customFieldsService);
 		Thing myThing = fieldsManager.updateFieldValues(request, thing, null, id);
 		LOGGER.info("saveThing: {} {}", editThing.getId(), editThing.getSummary());
@@ -403,10 +451,15 @@ public class ThingsController extends BaseController {
 		 */
 		// model.addAttribute("labelsUtils", new LabelsUtils());
 
-		LOGGER.debug("Getting first 20 Things");
-		model.addAttribute("searchedThings", thingService.getFirstTwentyThings());
+		// LOGGER.debug("Getting first 20 Things");
+		// model.addAttribute("searchedThings", thingService.getFirstTwentyThings());
 
-		return THINGS_PAGE;
+		// Fields
+		// TODO: ponemos TAREA
+		List<CustomFieldValueReduced> fields = customFieldsService.getAllFieldValuesFromThing(thingSaved);
+		model.addAttribute("fields", fields);
+
+		return THING_PAGE;
 	}
 
 	// newComment

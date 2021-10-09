@@ -94,14 +94,21 @@ public class ThingService {
 		thing.setId(thingPojo.getId());
 		thing.setBox(boxRepository.findById((long) thingPojo.getBoxId()).get());
 
-		Integer lastKey = boxRepository.getLastKey(thingPojo.getBoxId());
-		if (lastKey == null) {
-			lastKey = 0;
+		Integer key;
+		LOGGER.debug("thingPojo.getKey(): {}", thingPojo.getKey());
+		if (thingPojo.getKey() == null) {
+			key = boxRepository.getLastKey(thingPojo.getBoxId());
+			if (key == null) {
+				key = 0;
+			} else {
+				key++;
+			}
+			boxRepository.updateLastKey(key, thingPojo.getBoxId());
 		} else {
-			lastKey++;
+			key = thingPojo.getKey();
 		}
-		boxRepository.updateLastKey(lastKey, thingPojo.getBoxId());
-		thing.setKey(lastKey);
+
+		thing.setKey(key);
 		if (thingPojo.getSummary().trim().length() > 0) {
 			thing.setSummary(thingPojo.getSummary());
 		} else {

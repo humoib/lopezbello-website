@@ -41,6 +41,28 @@ public class AdminController {
 		return "admin/index";
 	}
 
+	@RequestMapping(value = { "/admin/users" }, method = RequestMethod.GET)
+	public String adminUsers(Model model, HttpServletRequest request) {
+		LOGGER.trace("## ADMIN USERS");
+
+		model.addAttribute("context", WebRequestUtils.getContext());
+
+		model.addAttribute("boxes", boxService.getAllBoxes());
+
+		return "admin/users";
+	}
+
+	@RequestMapping(value = { "/admin/groups" }, method = RequestMethod.GET)
+	public String adminGroups(Model model, HttpServletRequest request) {
+		LOGGER.trace("## ADMIN GROUPS");
+
+		model.addAttribute("context", WebRequestUtils.getContext());
+
+		model.addAttribute("boxes", boxService.getAllBoxes());
+
+		return "admin/groups";
+	}
+
 	@RequestMapping(value = { "/admin/boxes" }, method = RequestMethod.GET)
 	public String adminPlaces(Model model, HttpServletRequest request) {
 		LOGGER.trace("## ADMIN BOXES");
@@ -96,10 +118,7 @@ public class AdminController {
 
 		model.addAttribute("context", WebRequestUtils.getContext());
 
-
 		return "admin/systemInfo";
 	}
 
-	
-	
 }
