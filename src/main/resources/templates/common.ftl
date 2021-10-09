@@ -110,6 +110,21 @@
 			<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 	</form> &nbsp; &nbsp;
 
+	<div class="btn-group" role="group">
+	    <button id="btnGroupDrop1" type="button" class="btn btn-md btn-primary dropdown-toggle" 
+	    	data-toggle="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+	      User: ${Session.SPRING_SECURITY_CONTEXT.authentication.name}
+	    </button>
+	    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+	      <li><a class="dropdown-item" href="#">Profile</a></li>
+	      <li><a class="dropdown-item" href="${context}/logout">Logout</a></li>
+	    </ul>
+	  </div>
+	  
+
+	&nbsp; &nbsp;
+	
+
 		<a class="button btn btn-outline-primary" href='${context}/admin/';" target="_new"><svg
 			width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear-fill"
 			fill="currentColor" xmlns="http://www.w3.org/2000/svg">

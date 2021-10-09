@@ -12,6 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.tgd.things.beans.ThingPojo;
@@ -23,12 +26,16 @@ import com.tgd.things.repository.BoxRepository;
 import com.tgd.things.repository.ThingRelationRepository;
 import com.tgd.things.repository.ThingRepository;
 import com.tgd.things.repository.ThingTypeRepository;
+import com.tgd.things.repository.security.UserRepository;
 
 @Service
 @Transactional
 public class ThingService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ThingService.class);
+
+	@Autowired
+	protected UserRepository userRepository;
 
 	@Autowired
 	protected BoxRepository boxRepository;
@@ -109,6 +116,13 @@ public class ThingService {
 		}
 
 		thing.setKey(key);
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			LOGGER.debug("USER: {}", userRepository.findByUsername(authentication.getName()));
+			thing.setCreator(userRepository.findByUsername(authentication.getName()));
+		}
+
 		if (thingPojo.getSummary().trim().length() > 0) {
 			thing.setSummary(thingPojo.getSummary());
 		} else {

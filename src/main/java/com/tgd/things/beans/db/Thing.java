@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.tgd.things.beans.db.security.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +32,12 @@ public class Thing {
 	@Column(name = "THI_SUMMARY", length = 500, nullable = false)
 	private String summary;
 
+	@ManyToOne
+	@JoinColumn(name = "THI_CREATOR") // , nullable = false
+	// @ManyToOne(optional = false)
+	// (optional = false)
+	private User creator;
+
 	@Column(name = "THI_CREATED", nullable = false)
 	private Date created;
 
@@ -42,8 +50,8 @@ public class Thing {
 	@ManyToOne(optional = false)
 	private ThingType thingType;
 
-	//@OneToMany(cascade = CascadeType.ALL)
-	//private List<ThingComment> thingComment;
+	// @OneToMany(cascade = CascadeType.ALL)
+	// private List<ThingComment> thingComment;
 
 	public Thing() {
 	}

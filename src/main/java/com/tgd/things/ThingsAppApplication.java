@@ -49,6 +49,7 @@ public class ThingsAppApplication extends SpringBootServletInitializer {
 		ThingsAppProperties bean = context.getBean(ThingsAppProperties.class);
 		bean.printVariable();
 
+		
 	}
 
 	@Profile("dev")

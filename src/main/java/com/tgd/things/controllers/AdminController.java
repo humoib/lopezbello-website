@@ -15,6 +15,7 @@ import com.tgd.things.service.BoxService;
 import com.tgd.things.service.CustomFieldsService;
 import com.tgd.things.service.LabelService;
 import com.tgd.things.service.ThingService;
+import com.tgd.things.service.security.UserService;
 import com.tgd.things.utils.WebRequestUtils;
 
 @Controller
@@ -24,11 +25,17 @@ public class AdminController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AdminController.class);
 
 	@Autowired
+	UserService userService;
+
+	@Autowired
 	LabelService labelService;
+
 	@Autowired
 	BoxService boxService;
+
 	@Autowired
 	ThingService thingService;
+
 	@Autowired
 	CustomFieldsService customFieldsService;
 
@@ -47,7 +54,7 @@ public class AdminController {
 
 		model.addAttribute("context", WebRequestUtils.getContext());
 
-		model.addAttribute("boxes", boxService.getAllBoxes());
+		model.addAttribute("users", userService.getAllUsers());
 
 		return "admin/users";
 	}

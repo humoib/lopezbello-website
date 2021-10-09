@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,9 +74,9 @@ public class MainController {
 		model.addAttribute("free_memory", Runtime.getRuntime().freeMemory() / 1024 / 1024); // MB
 		model.addAttribute("total_memory", Runtime.getRuntime().totalMemory() / 1024 / 1024); // MB
 		model.addAttribute("max_memory", Runtime.getRuntime().maxMemory() / 1024 / 1024); // MB
-		
-		model.addAttribute("available_processors",  Runtime.getRuntime().availableProcessors());
-		
+
+		model.addAttribute("available_processors", Runtime.getRuntime().availableProcessors());
+
 		return "systeminfo";
 	}
 
@@ -88,6 +91,11 @@ public class MainController {
 
 		LOGGER.debug("ConfigurationProperties.getBaseUrl(): {}", config.getBaseUrl());
 		LOGGER.debug("ConfigurationProperties.getValor(): {}", config.getValor());
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			model.addAttribute("username", authentication.getName());
+		}
 
 		model.addAttribute("baseUrl", config.getBaseUrl());
 		model.addAttribute("valor", config.getValor());

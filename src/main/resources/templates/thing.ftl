@@ -358,7 +358,7 @@
 			
 				<h5>People</h5>
 					<ul>
-						<li><b>Creator:</b> user
+						<li><b>Creator:</b> ${thing.creator.username!"unknown"}
 						<li><b>Assignee:</b> user
 						<li><b>Watchers:</b> users
 					</ul>
