@@ -75,8 +75,8 @@ insert into THING_TYPE_CUSTOMFIELD (THINGTYPE_TTY_ID, CUSTOMFIELD_CFI_ID) values
 insert into THING_TYPE_CUSTOMFIELD (THINGTYPE_TTY_ID, CUSTOMFIELD_CFI_ID) values (6,20002);
 
 --https://www.browserling.com/tools/bcrypt
-INSERT INTO USERS (ID, USERNAME, PASSWORD) VALUES (1, 'admin', '$2a$10$y9ryANGEdyJesYKHRte3duc0VDFpfv9ZmvSxFsGfVVGwCtcYdlNrm');
-INSERT INTO USERS (ID, USERNAME, PASSWORD) VALUES (2, 'bruno', '$2a$10$0/XuWB5ifzZasgwEz.NaJOXbqwPIm2A9JAmy6xQOPcHfzRVWwLXfC');  -- t0ledo
+INSERT INTO USERS (ID, USERNAME, FULLNAME, EMAIL, PASSWORD) VALUES (1, 'admin', 'Admin User', 'admin@th1ngs.net', '$2a$10$hxnQfyiiTeR/E6w0tqFwCuRIKi06RIKvSSK5YEseC2V8j.Q6xFj.y');
+INSERT INTO USERS (ID, USERNAME, FULLNAME, EMAIL, PASSWORD) VALUES (2, 'bruno', 'Bruno Lomas', 'setitup@yourdomain.com', '$2a$10$0/XuWB5ifzZasgwEz.NaJOXbqwPIm2A9JAmy6xQOPcHfzRVWwLXfC');  -- t0ledo
 
 -- Things
 insert into THING (THI_ID, BOX_BOX_ID, THI_KEY, THI_SUMMARY, THI_CREATED, THINGTYPE_TTY_ID,THI_CREATOR) 

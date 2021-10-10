@@ -6,11 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.tgd.things.beans.db.security.User;
 import com.tgd.things.service.BoxService;
 import com.tgd.things.service.CustomFieldsService;
 import com.tgd.things.service.LabelService;
@@ -126,6 +128,76 @@ public class AdminController {
 		model.addAttribute("context", WebRequestUtils.getContext());
 
 		return "admin/systemInfo";
+	}
+
+	//
+	// USERS
+	//
+
+	@RequestMapping(value = { "/admin/user/add" }, method = RequestMethod.GET)
+	public String addUser(Model model, HttpServletRequest request) {
+		LOGGER.trace("## ADMIN USER");
+
+		model.addAttribute("context", WebRequestUtils.getContext());
+
+		return "admin/user-form";
+	}
+
+	@RequestMapping(value = { "/admin/user/add" }, method = RequestMethod.POST)
+	public String addUserPost(Model model, HttpServletRequest request) {
+		LOGGER.trace("## ADMIN USER");
+
+		String username = request.getParameter("username");
+		String fullname = request.getParameter("fullname");
+		String email = request.getParameter("email");
+		String password = request.getParameter("password");
+
+		userService.addUser(username, fullname, email, password);
+
+		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("users", userService.getAllUsers());
+
+		return "redirect:" + WebRequestUtils.getContext() + "/admin/users";
+	}
+
+	@RequestMapping(value = { "/admin/user/edit" }, method = RequestMethod.GET)
+	public String editUser(Model model, HttpServletRequest request) {
+		LOGGER.trace("## ADMIN USER - EDIT 1");
+
+		model.addAttribute("context", WebRequestUtils.getContext());
+
+		LOGGER.debug("userId: {}", request.getParameter("userId"));
+		User user = userService.findById(Long.parseLong(request.getParameter("userId")));
+		model.addAttribute("user", user);
+
+		return "admin/user-form";
+	}
+
+	@RequestMapping(value = { "/admin/user/edit" }, method = RequestMethod.POST)
+	public String editUserPost(Model model, HttpServletRequest request) {
+		LOGGER.trace("## ADMIN USER - EDIT 2");
+
+		model.addAttribute("context", WebRequestUtils.getContext());
+
+		LOGGER.debug("userId: {}", request.getParameter("userId"));
+		User user = userService.findById(Long.parseLong(request.getParameter("userId")));
+
+		LOGGER.debug("user retrieved: {}", user);
+
+		String fullname = request.getParameter("fullname");
+		String email = request.getParameter("email");
+		String password = request.getParameter("password");
+
+		user.setFullname(fullname);
+		user.setEmail(email);
+		user.setPassword(password);
+
+		userService.save(user);
+
+		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("users", userService.getAllUsers());
+
+		return "redirect:" + WebRequestUtils.getContext() + "/admin/users";
 	}
 
 }

@@ -22,6 +22,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void save(User user) {
+		//user.setId(user.);
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		user.setRoles(new HashSet<>(roleRepository.findAll()));
 		userRepository.save(user);
@@ -31,8 +32,24 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findAll();
 	}
 
-	@Override
+	public User findById(Long id) {
+		return userRepository.findById(id).get();
+	}
+
 	public User findByUsername(String username) {
 		return userRepository.findByUsername(username);
 	}
+
+	public User addUser(String username, String fullname, String email, String password) {
+		User user = new User();
+		user.setUsername(username);
+		user.setFullname(fullname);
+		user.setEmail(email);
+		user.setPassword(bCryptPasswordEncoder.encode(password));
+
+		user.setRoles(new HashSet<>(roleRepository.findAll()));
+
+		return userRepository.save(user);
+	}
+
 }
