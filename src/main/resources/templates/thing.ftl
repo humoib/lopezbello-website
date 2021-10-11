@@ -48,7 +48,7 @@
 					<input type="hidden" id="thingId" name="thingId" value="${thing.id}">
 					
 					<h5><a href='${context}/thing/${thing.id}'>${thing.box.boxKey}-${thing.key}</a> ${thing.summary}</h5>
-				
+					
 				</#if>
 							
 				<!-- Action Bar--> 
@@ -66,7 +66,7 @@
 				      <a class="dropdown-item" href="#">Dropdown link</a>
 				    </div>
 				</div>
-				
+					
 				<div class="btn-group btn-group-sm" role="group">
 				    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				      Transit
@@ -77,12 +77,19 @@
 				    </div>
 	            </div>
 				
-				<br/><br/>
+				<br/>
 				
 				<#if thing.thingTypeId??>
 					<p><b>Type:</b> ${thing.thingTypeId}</p>
 			  	</#if>
-											
+									
+				<#if thing.analysis??>
+					<p><b>Analysis:</b></p>
+					<p>${thing.analysis!""}</p>
+				
+					<hr/>
+				</#if>
+						
 				<#if fields??>
 			  		<#list fields as field >
 			  			<#if field.value?? >
@@ -137,6 +144,13 @@
 				      			</#if>
 				      			>
 				    	</div>
+				    	
+				    	<label for="analysis" class="col-sm-2 col-form-label">Analysis</label>
+				    	<div class="col-sm-10">
+				    		<textarea class="form-control" id="exampleFormControlTextarea1" rows="3" 
+				    			name="analysis"><#if thing??>${thing.analysis!""}</#if></textarea>
+				    	</div>
+				    	
 					</div>
 					
 					<!-- FIELDS -->

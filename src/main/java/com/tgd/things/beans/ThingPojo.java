@@ -21,6 +21,7 @@ public class ThingPojo {
 
 	protected String summary;
 
+	protected String analysis;
 	protected String description;
 
 	protected Date created;

@@ -1,6 +1,8 @@
 package com.tgd.things.controllers;
 
 import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,8 +19,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.tgd.things.beans.ThingPojo;
+import com.tgd.things.beans.db.Thing;
 import com.tgd.things.config.ThingsAppProperties;
 import com.tgd.things.service.ThingService;
+import com.tgd.things.utils.ThingUtils;
 import com.tgd.things.utils.WebRequestUtils;
 
 @Controller
@@ -49,7 +54,13 @@ public class MainController {
 		LOGGER.trace("## INDEX ");
 
 		model.addAttribute("context", WebRequestUtils.getContext());
-		model.addAttribute("things", thingService.getFirstTwentyThings());
+
+		List<Thing> things_db = thingService.getFirstTwentyThings();
+		List<ThingPojo> things = new ArrayList();
+		for (Thing thingDb : things_db) {
+			things.add(ThingUtils.db2pojoThing(thingDb));
+		}
+		model.addAttribute("things", things);
 
 		return "index";
 	}

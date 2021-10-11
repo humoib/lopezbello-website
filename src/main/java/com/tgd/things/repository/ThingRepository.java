@@ -13,7 +13,7 @@ import com.tgd.things.beans.db.Thing;
 public interface ThingRepository extends PagingAndSortingRepository<Thing, Long> {
 
 	// TODO Limit 20
-	@Query("SELECT t FROM Thing t ")
+	@Query("SELECT t FROM Thing t ORDER by created desc")
 	List<Thing> getFirstTwentyThings();
 
 	@Query("SELECT t FROM Thing t WHERE BOX_BOX_ID = ?1")
@@ -30,7 +30,7 @@ public interface ThingRepository extends PagingAndSortingRepository<Thing, Long>
 	@Query(value = "SELECT t.THI_ID as id, t.THI_SUMMARY as summary, t.THI_CREATED as created FROM THING t "
 			+ "WHERE THI_SUMMARY LIKE '%?1%'", nativeQuery = true)
 	public List<ThingPojo2> searchByText(Long thingId);
-	
+
 	List<Thing> findBySummaryContainingIgnoreCase(String text);
-	
+
 }

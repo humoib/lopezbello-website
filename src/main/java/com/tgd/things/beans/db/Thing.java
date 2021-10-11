@@ -32,6 +32,11 @@ public class Thing {
 	@Column(name = "THI_SUMMARY", length = 500, nullable = false)
 	private String summary;
 
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
+	@Column(name = "THI_ANALYSIS")
+	private String analysis;
+
 	@ManyToOne
 	@JoinColumn(name = "THI_CREATOR") // , nullable = false
 	// @ManyToOne(optional = false)

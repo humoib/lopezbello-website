@@ -35,6 +35,15 @@ public class Box {
 	@Column(name = "BOX_LAST_KEY")
 	private Integer lastKey;
 
+	// 1 - Stuff
+	// 2 - Process
+	// 3 - Software
+	// 4 - Service Management
+	// 5 - Photo
+	// 6 - Places
+	@Column(name = "BOX_TYPE", length = 50)
+	private Integer type;
+
 	@Column(name = "BOX_VIEW", length = 50)
 	private String view;
 

@@ -20,6 +20,7 @@ import com.tgd.things.plugins.PhotoServicePlugin;
 import com.tgd.things.service.BoxService;
 import com.tgd.things.service.Initializer;
 import com.tgd.things.service.ThingService;
+import com.tgd.things.utils.FrontWrapper;
 import com.tgd.things.utils.WebRequestUtils;
 
 @Controller
@@ -47,12 +48,13 @@ public class BoxesController {
 	public String getThings(Model model, HttpServletRequest request) {
 		LOGGER.debug("## GET Maincontroller: things");
 
-		model.addAttribute("hey", "you");
-
 		model.addAttribute("context", WebRequestUtils.getContext());
 		request.getSession().setAttribute("contextpath", request.getContextPath());
 
 		model.addAttribute("boxes", boxService.getAllBoxes());
+
+		FrontWrapper frontWrapper = new FrontWrapper();
+		model.addAttribute("frontwrapper", frontWrapper);
 
 		return BaseController.BOXES_PAGE;
 	}

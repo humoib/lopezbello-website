@@ -52,7 +52,6 @@ public class ThingService {
 	public Page<Thing> findAll(Pageable pageable) {
 
 		Page<Thing> ret = thingRepository.findAll(pageable);
-		LOGGER.debug("--> " + ret);
 
 		return ret;
 	}
@@ -128,6 +127,9 @@ public class ThingService {
 		} else {
 			thing.setSummary("--BLANK--");
 		}
+
+		thing.setAnalysis(thingPojo.getAnalysis());
+
 		if (thingPojo.getCreated() != null) {
 			thing.setCreated(thingPojo.getCreated());
 		} else {

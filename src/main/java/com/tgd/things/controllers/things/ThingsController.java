@@ -22,6 +22,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -85,7 +86,7 @@ public class ThingsController extends BaseController {
 		// LOGGER.debug("Getting first 20 Things");
 		// model.addAttribute("searchedThings", thingService.getFirstTwentyThings());
 
-		pageObject = PageRequest.of(page, ThingsAppConstants.DEFAULT_PAGE_SIZE);
+		pageObject = PageRequest.of(page, ThingsAppConstants.DEFAULT_PAGE_SIZE, Sort.by("updated").descending());
 		Page<Thing> allThings = thingService.findAll(pageObject);
 		model.addAttribute("searchedThings", allThings.getContent());
 
@@ -301,6 +302,7 @@ public class ThingsController extends BaseController {
 		ThingPojo addThing = new ThingPojo();
 		addThing.setBoxId(Integer.parseInt(request.getParameter("boxId")));
 		addThing.setSummary(request.getParameter("summary"));
+		addThing.setAnalysis(request.getParameter("analysis"));
 		addThing.setThingTypeId(Long.parseLong(request.getParameter("thingTypeId")));
 		addThing.setCreated(new Date());
 
@@ -323,7 +325,7 @@ public class ThingsController extends BaseController {
 		// Getting Things List
 		model.addAttribute("searchedThings", thingService.getFirstTwentyThings());
 
-		return THINGS_PAGE;
+		return "redirect:" + WebRequestUtils.getContext() + "/" + THINGS_PAGE;
 	}
 
 	@RequestMapping(value = { "/thing/edit/{id}" }, method = RequestMethod.GET)
@@ -403,6 +405,7 @@ public class ThingsController extends BaseController {
 		editThing.setBoxId(thing.getBox().getId().intValue());
 		editThing.setThingTypeId(thing.getThingType().getId());
 		editThing.setSummary(request.getParameter("summary"));
+		editThing.setAnalysis(request.getParameter("analysis"));
 		editThing.setCreated(thing.getCreated());
 
 		editThing.setDescription(request.getParameter("description"));
@@ -459,12 +462,12 @@ public class ThingsController extends BaseController {
 		List<CustomFieldValueReduced> fields = customFieldsService.getAllFieldValuesFromThing(thingSaved);
 		model.addAttribute("fields", fields);
 
-		return THING_PAGE;
+		return "redirect:" + WebRequestUtils.getContext() + "/" + THINGS_PAGE;
 	}
 
 	// newComment
 	@RequestMapping(value = { "/thing/newComment" }, method = RequestMethod.POST)
-	public RedirectView addNewComment(ThingPojo thingpojo, Model model, HttpServletRequest request,
+	public String addNewComment(ThingPojo thingpojo, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
 		LOGGER.debug("## POST ThingsController: add new comment");
 
@@ -518,6 +521,6 @@ public class ThingsController extends BaseController {
 		// Getting Things List
 		model.addAttribute("searchedThings", thingService.getFirstTwentyThings());
 
-		return new RedirectView(WebRequestUtils.getContext() + "/thing/" + myThing.get().getId());
+		return "redirect:" + WebRequestUtils.getContext() + "/" + THING_PAGE + myThing.get().getId();
 	}
 }
