@@ -58,8 +58,8 @@
 	}
 }
 </style>
-<!-- Custom styles for this template -->
-<!--link href="navbar-top-fixed.css" rel="stylesheet"-->
+	<!-- Custom styles for this template -->
+	<!--link href="navbar-top-fixed.css" rel="stylesheet"-->
 
 	<!-- Main JS -->
 	<script src="${context}/js/main.js"></script>
@@ -68,7 +68,7 @@
 
 <body>
 	<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-		<a class="navbar-brand" href="${context}/">Boxes!</a>
+		<a class="navbar-brand" href="${context}/index">Th1ngs!</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
 		data-target="#navbarCollapse" aria-controls="navbarCollapse"
 		aria-expanded="false" aria-label="Toggle navigation"><span
@@ -79,7 +79,7 @@
 				<!-- li class="nav-item"><a class="nav-link" href="/">Dashboards</a></li-->
 
 				<li class="nav-item ">
-					<!-- active --> <a class="nav-link" href="${context}/garage">Garage</a>
+					<!-- active --> <a class="nav-link" href="${context}/garage">Boxes</a>
 					<!--  <span class="sr-only">(current)</span> -->
 			</li>
 				<li class="nav-item "><a class="nav-link"

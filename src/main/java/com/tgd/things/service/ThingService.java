@@ -56,6 +56,18 @@ public class ThingService {
 		return ret;
 	}
 
+	public Optional<Thing> getThing(Long id) {
+		return thingRepository.findById(id);
+	}
+
+	public Thing getThingByKey(String thingKey) {
+		if (thingKey != null && thingKey.contains("-")) {
+			String[] splitted = thingKey.split("-");
+			return thingRepository.findByThingKey(splitted[0], Long.parseLong(splitted[1]));
+		}
+		return null;
+	}
+
 	public String getReadableKey(Thing thing) {
 		Optional<Thing> mything = thingRepository.findById(thing.getId());
 		Optional<Box> mybox = boxRepository.findById(thing.getBox().getId());
@@ -65,10 +77,6 @@ public class ThingService {
 	// TODO: Se debe reducir a un objeto más ligero (ThingReduced)
 	public Iterable<Thing> getAllThings() {
 		return thingRepository.findAll();
-	}
-
-	public Optional<Thing> getThing(Long id) {
-		return thingRepository.findById(id);
 	}
 
 	public List<Thing> getFirstTwentyThings() {

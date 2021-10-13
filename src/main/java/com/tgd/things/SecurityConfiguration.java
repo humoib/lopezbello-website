@@ -37,8 +37,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		// https://dzone.com/articles/add-login-to-your-spring-boot-app-in-10-mins
 
-		http.httpBasic().and().authorizeRequests().antMatchers("/resources/**", "/admin/h2-console/**", "/monitoring/**").permitAll()
-				.anyRequest().authenticated().and().formLogin()
+		http.httpBasic().and().authorizeRequests()
+				.antMatchers("/", "/home", "/signup", "/resources/**", "/admin/h2-console/**", "/monitoring/**",
+						"/css/**","/js/**")
+				.permitAll().anyRequest().authenticated().and().formLogin()
+				// .loginPage("/login.html")
+				.loginProcessingUrl("/login").defaultSuccessUrl("/index", true)
 				// .loginPage("/login")
 				.permitAll().and().logout().permitAll(); // .and().antMatcher("/admin/h2-console/**");
 
@@ -49,8 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	/*
 	 * @Bean
 	 * 
-	 * @Override public UserDetailsService userDetailsService() { UserDetails
-	 * user =
+	 * @Override public UserDetailsService userDetailsService() { UserDetails user =
 	 * User.withDefaultPasswordEncoder().username("user").password("password").
 	 * roles("USER") .build();
 	 * 

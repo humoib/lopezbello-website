@@ -1,6 +1,7 @@
 package com.tgd.things.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -30,5 +31,10 @@ public interface ThingRepository extends PagingAndSortingRepository<Thing, Long>
 	public List<ThingPojoSearcher> searchByText(Long thingId);
 
 	List<Thing> findBySummaryContainingIgnoreCase(String text);
+
+	@Query(value = "SELECT t.* FROM THING t "
+			+ " LEFT JOIN BOX b ON b.BOX_ID = t.BOX_BOX_ID "
+			+ "WHERE BOX_KEY = ?1 AND THI_KEY = ?2 ", nativeQuery = true)
+	Thing findByThingKey(String boxKey, Long key);
 
 }

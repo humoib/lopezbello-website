@@ -2,6 +2,7 @@ package com.tgd.things.controllers;
 
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.tgd.things.beans.ThingPojo;
+import com.tgd.things.beans.db.Box;
 import com.tgd.things.beans.db.Thing;
 import com.tgd.things.config.ThingsAppProperties;
+import com.tgd.things.service.BoxService;
 import com.tgd.things.service.ThingService;
 import com.tgd.things.utils.ThingUtils;
 import com.tgd.things.utils.WebRequestUtils;
@@ -38,23 +41,42 @@ public class MainController {
 	private ApplicationContext applicationContext;
 
 	@Autowired
+	BoxService boxService;
+
+	@Autowired
 	ThingService thingService;
 
-	@RequestMapping(value = { "/login2" }, method = RequestMethod.GET)
-	public String login(Model model) {
-		LOGGER.trace("## LOGIN ");
+	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
+	public String index(Model model) {
+		LOGGER.trace("## HOME ");
 
 		model.addAttribute("context", WebRequestUtils.getContext());
 
-		return "login";
+		return "home";
 	}
 
-	@RequestMapping(value = { "/", "/index" }, method = RequestMethod.GET)
-	public String index(Model model) {
+	@RequestMapping(value = { "/main", "/index" }, method = RequestMethod.GET)
+	public String main(Model model) {
 		LOGGER.trace("## INDEX ");
 
 		model.addAttribute("context", WebRequestUtils.getContext());
 
+		// Boxes
+		Iterable<Box> boxes_db = boxService.getAllBoxes();
+		model.addAttribute("boxes", boxes_db.iterator());
+
+		HashMap<String, List<ThingPojo>> thingBoxes = new HashMap<String, List<ThingPojo>>();
+		for (Box box : boxes_db) {
+			List<Thing> things_db = thingService.getBoxThings(box.getId());
+			List<ThingPojo> thingPojo_list = new ArrayList();
+			for (Thing thingDb : things_db) {
+				thingPojo_list.add(ThingUtils.db2pojoThing(thingDb));
+			}
+			thingBoxes.put(String.valueOf(box.getId()), thingPojo_list);
+		}
+		model.addAttribute("thingBoxes", thingBoxes);
+
+		// Things
 		List<Thing> things_db = thingService.getFirstTwentyThings();
 		List<ThingPojo> things = new ArrayList();
 		for (Thing thingDb : things_db) {
@@ -63,6 +85,15 @@ public class MainController {
 		model.addAttribute("things", things);
 
 		return "index";
+	}
+
+	@RequestMapping(value = { "/signup" }, method = RequestMethod.GET)
+	public String signup(Model model) {
+		LOGGER.trace("## SIGN-UP ");
+
+		model.addAttribute("context", WebRequestUtils.getContext());
+
+		return "signup";
 	}
 
 	/**
@@ -89,6 +120,15 @@ public class MainController {
 		model.addAttribute("available_processors", Runtime.getRuntime().availableProcessors());
 
 		return "systeminfo";
+	}
+
+	@RequestMapping(value = { "/login2" }, method = RequestMethod.GET)
+	public String login(Model model) {
+		LOGGER.trace("## LOGIN ");
+
+		model.addAttribute("context", WebRequestUtils.getContext());
+
+		return "login";
 	}
 
 	@RequestMapping(value = "/hello", method = RequestMethod.GET)

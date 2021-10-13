@@ -123,18 +123,27 @@ public class ThingsController extends BaseController {
 		// request.getContextPath());
 		// model.addAttribute("context", WebRequestUtils.getContext());
 
-		// thing
-		Optional<Thing> thing = thingService.getThing(Long.parseLong(id));
-		LOGGER.debug("thing: {}", thing.toString());
-		model.addAttribute(THING_PAGE, thing.get());
+		Thing thing = null;
+		if (id != null && id.contains("-")) {
+			// thing by string key
+			thing = thingService.getThingByKey(String.valueOf(id));
+			LOGGER.debug("thing: {}", thing.toString());
+			model.addAttribute(THING_PAGE, thing);
+		} else {
+			// thing by long id
+			Optional<Thing> thingOptional = thingService.getThing(Long.parseLong(id));
+			thing = thingOptional.get();
+			LOGGER.debug("thing: {}", thing.toString());
+			model.addAttribute(THING_PAGE, thingOptional.get());
+		}
 
 		// box
-		model.addAttribute("box", thing.get().getBox());
+		model.addAttribute("box", thing.getBox());
 
 		// Object with fields
 		// HashMap fields = new HashMap();
 
-		List<CustomFieldValueReduced> fields = customFieldsService.getAllFieldValuesFromThing(thing.get());
+		List<CustomFieldValueReduced> fields = customFieldsService.getAllFieldValuesFromThing(thing);
 		for (CustomFieldValueReduced field : fields) {
 			LOGGER.debug("FIELD ---> id: {} name: {} type: {} value: {}", field.getKey(), field.getName(),
 					field.getType(), field.getValue());
@@ -148,9 +157,9 @@ public class ThingsController extends BaseController {
 		 * CustomFieldReduced cfReduced = new CustomFieldReducedImpl (); cfReduced. }
 		 */
 
-		model.addAttribute("thingId", thing.get().getId());
+		model.addAttribute("thingId", thing.getId());
 
-		List<ThingComment> comments = (List<ThingComment>) thingCommentService.getComments(thing.get());
+		List<ThingComment> comments = (List<ThingComment>) thingCommentService.getComments(thing);
 		if (comments != null) {
 			LOGGER.debug("COMMENTS: size:{}", comments.size());
 			for (ThingComment comment : comments) {
@@ -161,7 +170,7 @@ public class ThingsController extends BaseController {
 		model.addAttribute("thingComments", comments);
 		model.addAttribute("fields", fields);
 
-		addRelations(model, id);
+		addRelations(model, String.valueOf(thing.getId()));
 
 		// fields.putAll(FieldsManager.getViewFields(thing.get().getThingType()));
 
@@ -523,6 +532,6 @@ public class ThingsController extends BaseController {
 		// Getting Things List
 		model.addAttribute("searchedThings", thingService.getFirstTwentyThings());
 
-		return "redirect:" + WebRequestUtils.getContext() + "/" + THING_PAGE + myThing.get().getId();
+		return "redirect:" + WebRequestUtils.getContext() + "/" + THING_PAGE + "/" + myThing.get().getId();
 	}
 }

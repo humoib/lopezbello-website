@@ -32,6 +32,9 @@ public class Thing {
 	@Column(name = "THI_SUMMARY", length = 500, nullable = false)
 	private String summary;
 
+	@ManyToOne(cascade = CascadeType.ALL)
+	private ThingStatus status;
+
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
 	@Column(name = "THI_ANALYSIS")
@@ -54,9 +57,6 @@ public class Thing {
 
 	@ManyToOne(optional = false)
 	private ThingType thingType;
-
-	// @OneToMany(cascade = CascadeType.ALL)
-	// private List<ThingComment> thingComment;
 
 	public Thing() {
 	}

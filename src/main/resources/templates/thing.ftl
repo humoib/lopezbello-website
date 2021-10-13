@@ -348,7 +348,7 @@
 				  <div class="form-group row">
 				    <div class="col-sm-10">
 				      <button type="submit" class="btn btn-primary">Submit</button>
-				      <button type="cancel" class="btn btn-secondary">Cancel</button>
+				      <a href="#" onclick="window.history.back();" class="btn btn-secondary">Cancel</a>
 				    </div>
 				  </div>
 				  

@@ -5,11 +5,13 @@
 	<table class="table table-sm table-bordered table-hover table table-striped">
 	  <thead>
 	    <tr>
-	      <th scope="col">Key</th>
+	      <th scope="col" style="white-space: nowrap; width:1%">Type</th>
+	      <th scope="col" style="white-space: nowrap; width:1%">Key</th>
 	      <th scope="col">Summary</th>
-	      <th scope="col">Type</th>
+	      <th scope="col">Creator</th>
 	      <th scope="col">Created</th>
 	      <th scope="col">Updated</th>
+	      <th scope="col">&nbsp;</th>
 	    </tr>
 	  </thead>
 	  <tbody>
@@ -17,14 +19,20 @@
 	  	<#if searchedThings??>
 		  	<#list searchedThings as thing >
 			    <tr>
+			      <td><p class="badge badge-primary">${thing.thingType.name}</p></td>
 			      <td scope="row"><a href='${context}/thing/${thing.id}'>${thing.box.boxKey}-${thing.key}</a></td>
 			      <td><a href='${context}/thing/${thing.id}'>${thing.summary}</a></td>
-			      <td>${thing.thingType.name}</td>
+			      <td>${thing.creator.fullname!"none"}</td>
 			      <td>${thing.created?date}</td>
 			      <td>
 			      	<#if thing.updated??>
 			      	${thing.updated?date}
 			      	</#if>
+			      </td>
+			      <td>
+			      	<button type="button" 
+			      		onclick="window.location.href = '${context}/thing/edit/${thing.id}';"
+			      		class="btn btn-sm btn-outline-success">Edit</button>
 			      </td>
 			    </tr>
 			</#list>
