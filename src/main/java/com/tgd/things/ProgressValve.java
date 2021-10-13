@@ -17,34 +17,36 @@ import java.io.PrintWriter;
 
 public class ProgressValve extends ValveBase {
 
-	private static final Logger log = LoggerFactory.getLogger(ProgressValve.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProgressValve.class);
 
 	public ProgressValve() {
 		super(true);
-		ProgressBeanPostProcessor.observe().subscribe(
-				beanName -> log.trace("Bean found: {}", beanName),
-				t -> log.error("Failed", t),
-				this::removeMyself);
+		ProgressBeanPostProcessor.observe().subscribe(beanName -> LOGGER.trace("Bean found: {}", beanName),
+				t -> LOGGER.error("Failed", t), this::removeMyself);
 	}
 
 	private void removeMyself() {
-		log.debug("Application started, de-registering");
+		LOGGER.debug("Application started, de-registering");
+		LOGGER.debug("getConainer(): " + getContainer());
+		
+		// TODO getResponse devuelve null  en APACHE TOMCAT
 		getContainer().getPipeline().removeValve(this);
+		
 	}
 
 	@Override
 	public void invoke(Request request, Response response) throws IOException, ServletException {
 		switch (request.getRequestURI()) {
-			case "/init.stream":
-				final AsyncContext asyncContext = request.startAsync();
-				streamProgress(asyncContext);
-				break;
-			case "/health":
-			case "/info":
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				break;
-			default:
-				sendHtml(response, "loading.html");
+		case "/init.stream":
+			final AsyncContext asyncContext = request.startAsync();
+			streamProgress(asyncContext);
+			break;
+		case "/health":
+		case "/info":
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			break;
+		default:
+			sendHtml(response, "loading.html");
 		}
 	}
 
@@ -53,14 +55,9 @@ public class ProgressValve extends ValveBase {
 		resp.setContentType("text/event-stream");
 		resp.setCharacterEncoding("UTF-8");
 		resp.flushBuffer();
-		final Subscription subscription = ProgressBeanPostProcessor.observe()
-				.map(beanName -> "data: " + beanName)
-				.subscribeOn(Schedulers.io())
-				.subscribe(
-						event -> stream(event, asyncContext.getResponse()),
-						e -> log.error("Error in observe()", e),
-						() -> complete(asyncContext)
-				);
+		final Subscription subscription = ProgressBeanPostProcessor.observe().map(beanName -> "data: " + beanName)
+				.subscribeOn(Schedulers.io()).subscribe(event -> stream(event, asyncContext.getResponse()),
+						e -> LOGGER.error("Error in observe()", e), () -> complete(asyncContext));
 		unsubscribeOnDisconnect(asyncContext, subscription);
 	}
 
@@ -73,19 +70,19 @@ public class ProgressValve extends ValveBase {
 		asyncContext.addListener(new AsyncListener() {
 			@Override
 			public void onComplete(AsyncEvent event) throws IOException {
-				log.info("onComplete()");
+				LOGGER.info("onComplete()");
 				subscription.unsubscribe();
 			}
 
 			@Override
 			public void onTimeout(AsyncEvent event) throws IOException {
-				log.info("onTimeout()");
+				LOGGER.info("onTimeout()");
 				subscription.unsubscribe();
 			}
 
 			@Override
 			public void onError(AsyncEvent event) throws IOException {
-				log.info("onError()");
+				LOGGER.info("onError()");
 				subscription.unsubscribe();
 			}
 
@@ -102,7 +99,7 @@ public class ProgressValve extends ValveBase {
 			writer.println();
 			writer.flush();
 		} catch (IOException e) {
-			log.warn("Failed to stream", e);
+			LOGGER.warn("Failed to stream", e);
 		}
 	}
 

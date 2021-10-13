@@ -5,10 +5,8 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-import com.tgd.things.beans.ThingPojo2;
+import com.tgd.things.beans.ThingPojoSearcher;
 import com.tgd.things.beans.db.Thing;
-
-//import es.excentia.jiracloud.datafieldsapp.controller.MainController;
 
 public interface ThingRepository extends PagingAndSortingRepository<Thing, Long> {
 
@@ -25,11 +23,11 @@ public interface ThingRepository extends PagingAndSortingRepository<Thing, Long>
 			+ "( SELECT t.THI_ID as id, t.THI_SUMMARY as summary, t.THI_CREATED as created FROM THING t "
 			+ "RIGHT JOIN THING_RELATION target on target.TARGETTHINGID = t.THI_ID "
 			+ " WHERE target.SOURCETHINGID= ?1 )", nativeQuery = true)
-	public List<ThingPojo2> findRelatedById(Long thingId);
+	public List<ThingPojoSearcher> findRelatedById(Long thingId);
 
 	@Query(value = "SELECT t.THI_ID as id, t.THI_SUMMARY as summary, t.THI_CREATED as created FROM THING t "
 			+ "WHERE THI_SUMMARY LIKE '%?1%'", nativeQuery = true)
-	public List<ThingPojo2> searchByText(Long thingId);
+	public List<ThingPojoSearcher> searchByText(Long thingId);
 
 	List<Thing> findBySummaryContainingIgnoreCase(String text);
 

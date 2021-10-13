@@ -27,7 +27,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.tgd.things.beans.CustomFieldReduced;
 import com.tgd.things.beans.CustomFieldValueReduced;
@@ -461,6 +460,9 @@ public class ThingsController extends BaseController {
 		// TODO: ponemos TAREA
 		List<CustomFieldValueReduced> fields = customFieldsService.getAllFieldValuesFromThing(thingSaved);
 		model.addAttribute("fields", fields);
+
+		LOGGER.debug("WebRequestUtils.getContext(): " + WebRequestUtils.getContext());
+		LOGGER.debug("---> " + "redirect:" + WebRequestUtils.getContext() + "/" + THINGS_PAGE);
 
 		return "redirect:" + WebRequestUtils.getContext() + "/" + THINGS_PAGE;
 	}

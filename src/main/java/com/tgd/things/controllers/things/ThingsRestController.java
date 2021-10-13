@@ -1,5 +1,6 @@
 package com.tgd.things.controllers.things;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -21,11 +22,13 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.tgd.things.beans.CustomFieldReduced;
+import com.tgd.things.beans.RestResponse;
 import com.tgd.things.beans.ThingPojo;
 import com.tgd.things.beans.db.Thing;
 import com.tgd.things.managers.FieldsManager;
 import com.tgd.things.service.CustomFieldsService;
 import com.tgd.things.service.ThingService;
+import com.tgd.things.utils.ThingUtils;
 
 @RestController
 public class ThingsRestController {
@@ -43,10 +46,31 @@ public class ThingsRestController {
 	private static final String template = "Hello, %s!";
 	private final AtomicLong counter = new AtomicLong();
 
-	@GetMapping(REST_VERSION + "/thing/{id}")
-	public ThingPojo getThing(@RequestParam(value = "name", defaultValue = "World") String summary) {
-		return null; // return new Thing(counter.incrementAndGet(),
-						// String.format(template, name));
+	@GetMapping(path = { REST_VERSION + "/thing", REST_VERSION + "/thing/{id}" })
+	public RestResponse getThings(@RequestParam(value = "name", defaultValue = "World") String summary, String id) {
+		LOGGER.trace("## REST getThings");
+		LOGGER.debug("Id: {}", id);
+		
+		if(id!=null && id.contains("-")){
+			// puede ser una thing concreta
+		}else {
+			// se pide por ID?
+			
+		}
+
+		List<Object> ret = new ArrayList();
+		// ret.add(new ThingPojo((long) 1));
+
+		Iterable<Thing> thingsDb_list = thingService.getAllThings();
+		for (Thing thingDb : thingsDb_list) {
+			ret.add(ThingUtils.db2pojoThing(thingDb));
+		}
+
+		RestResponse restResponse = new RestResponse();
+		restResponse.setCount(ret.size());
+		restResponse.setResponse(ret);
+
+		return restResponse;
 	}
 
 	/**
@@ -83,16 +107,14 @@ public class ThingsRestController {
 		/*
 		 * List<CustomFieldReduced> fields = customFieldsService
 		 * .getAllFieldsFromThingType(thingService.findThingTypeById(saveThing.
-		 * getThingTypeId())); Set keys = hashMap.keySet(); for
-		 * (CustomFieldReduced field : fields) { if(
-		 * keys.contains(field.getName()).){
+		 * getThingTypeId())); Set keys = hashMap.keySet(); for (CustomFieldReduced
+		 * field : fields) { if( keys.contains(field.getName()).){
 		 * LOGGER.debug("FIELD ---> id: {} name: {} type: {}", field.getKey(),
-		 * field.getName(), field.getType()); String temp =
-		 * request.getParameter("cf_" + field.getId());
-		 * LOGGER.debug("REQUEST PARAM {} value {}", "cf_" + field.getId(),
-		 * request.getParameter("cf_" + field.getId())); if (temp != "") { int
-		 * ret = customFieldsService.updateValue(myThing, field.getName(),
-		 * temp); LOGGER.debug("updated " + temp + " - ret:" + ret); } } }
+		 * field.getName(), field.getType()); String temp = request.getParameter("cf_" +
+		 * field.getId()); LOGGER.debug("REQUEST PARAM {} value {}", "cf_" +
+		 * field.getId(), request.getParameter("cf_" + field.getId())); if (temp != "")
+		 * { int ret = customFieldsService.updateValue(myThing, field.getName(), temp);
+		 * LOGGER.debug("updated " + temp + " - ret:" + ret); } } }
 		 */
 
 		// return new Thing(counter.incrementAndGet(), String.format(template,

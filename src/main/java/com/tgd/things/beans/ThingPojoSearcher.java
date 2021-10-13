@@ -1,6 +1,6 @@
 package com.tgd.things.beans;
 
-public interface ThingPojo2 {
+public interface ThingPojoSearcher {
 
 	String getId();
 

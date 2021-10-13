@@ -18,7 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.tgd.things.beans.ThingPojo;
-import com.tgd.things.beans.ThingPojo2;
+import com.tgd.things.beans.ThingPojoSearcher;
 import com.tgd.things.beans.db.Box;
 import com.tgd.things.beans.db.Thing;
 import com.tgd.things.beans.db.ThingType;
@@ -153,10 +153,10 @@ public class ThingService {
 	public Iterable<ThingPojo> getAllRelatedThings(Thing thing) {
 		LOGGER.debug("1111 thing: " + thing.getId());
 
-		List<ThingPojo2> related = thingRepository.findRelatedById(thing.getId());
+		List<ThingPojoSearcher> related = thingRepository.findRelatedById(thing.getId());
 		List<ThingPojo> related2send = new ArrayList();
 
-		for (ThingPojo2 thingPojo : related) {
+		for (ThingPojoSearcher thingPojo : related) {
 			LOGGER.debug("------- " + thingPojo.getId() + " " + thingPojo.getSummary());
 			ThingPojo tmp = new ThingPojo();
 			tmp.setId(Long.parseLong(thingPojo.getId()));
