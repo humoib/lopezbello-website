@@ -64,6 +64,9 @@
 	<!-- Main JS -->
 	<script src="${context}/js/main.js"></script>
 
+	<!-- Main CSS -->
+	<link href="${context}/css/things.css" rel="stylesheet">
+
 </head>
 
 <body>

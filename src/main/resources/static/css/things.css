@@ -1,0 +1,7 @@
+
+.panel > .panel-heading {
+    background-image: none;
+    background-color: lightgray;
+    color: black;
+}
+

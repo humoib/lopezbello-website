@@ -100,28 +100,52 @@
 			  	
 			  	<hr/>
 			  	
+				
 			  	<!-- relations -->
 				<#if !operation?? >
 					<#if thing?? >
-  						    					
-    					<button type="button" class="btn-small btn-primary" data-toggle="modal" data-target="#relations-modal"
-    						title="Number: ${thingsRelated?size}">
-  							Add relation
-						</button>
+  						
+  						<div class="panel panel-default">
+  							<div class="panel-heading">Attachments</div>
+							<div class="panel-body">
+								<ul>
+									<li>file1
+									<li>file2								
+								</ul>
+							</div>
+						</div>
+													
+  						<div class="panel panel-default">
+  							<div class="panel-heading">Relations
+  								<button type="button" class="btn-small btn-primary float-sm-right" data-toggle="modal" data-target="#relations-modal"
+		    						title="Number: ${thingsRelated?size}">
+		  							Add relation
+								</button>
+  							</div>
+							<div class="panel-body">
+								<#if thingsRelated??>
+		  							# ${thingsRelated?size}<br/>
+		  							<ul>
+						 	 			<li><#list thingsRelated as thingRelated >
+											<a href="${context}/thing/${thingRelated.id}" 
+												class="list-group-item list-group-item-action"
+												>${thingRelated.humanKey} ${thingRelated.summary}</a>
+									</ul>
+									</#list>	
+						 		</#if>
+							</div>
+						</div>
+						
+						    					
+    					
     	  				
-  						<#if thingsRelated??>
-  							# ${thingsRelated?size}<br/>
-			 	 			<#list thingsRelated as thingRelated >
-								<a href="${context}/thing/${thingRelated.id}" 
-									class="list-group-item list-group-item-action"
-									>${thingRelated.humanKey} ${thingRelated.summary}</a>
-							</#list>	
-				 		</#if>
+  						
 				 		
 					</#if>	
 				</#if>
 				<!-- end relations -->
 			
+				
 			<#elseif (operation=="new"||operation=="edit")>
 			
 				<!-- EDIT -->
