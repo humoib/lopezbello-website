@@ -47,7 +47,7 @@
 				<#if thing??>
 					<input type="hidden" id="thingId" name="thingId" value="${thing.id}">
 					
-					<h5><a href='${context}/thing/${thing.id}'>${thing.box.boxKey}-${thing.key}</a> ${thing.summary}</h5>
+					<h5><a href='${context}/thing/${thing.thingKey}'>${thing.thingKey}</a> : ${thing.summary}</h5>
 					
 				</#if>
 							
@@ -56,7 +56,10 @@
 				    <button type="button" class="btn btn-primary"
 				    	onclick="window.location.href = '${context}/thing/edit/${thing.id}';">Edit</button>
 				    <button type="button" class="btn btn-primary">Assign</button>
-				    <button type="button" class="btn btn-secondary">Attach</button>
+				    
+				    <button type="button" class="btn btn-secondary"
+				    	onclick="window.location.href = '${context}/thing/attach/${thing.id}';">Attach</button>
+				    
 				    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#relations-modal">Relate</button>
 				    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				      More
@@ -78,10 +81,6 @@
 	            </div>
 				
 				<br/>
-				
-				<#if thing.thingTypeId??>
-					<p><b>Type:</b> ${thing.thingTypeId}</p>
-			  	</#if>
 									
 				<#if thing.analysis??>
 					<p><b>Analysis:</b></p>
@@ -100,44 +99,49 @@
 			  	
 			  	<hr/>
 			  	
-				
-			  	<!-- relations -->
+			  	<!-- Attachments & relations -->
 				<#if !operation?? >
 					<#if thing?? >
   						
-  						<div class="panel panel-default">
-  							<div class="panel-heading">Attachments</div>
-							<div class="panel-body">
-								<ul>
-									<li>file1
-									<li>file2								
-								</ul>
+  						<div class="card">
+  							<div class="card-header"><b>Attachments</b>
+  								<button type="button" class="btn-small btn-primary float-sm-right" data-toggle="modal" data-target="#relations-modal"
+		    						title="Number: ${thingsRelated?size}">
+		  							Attach
+								</button>
+  							</div>
+  							<div class="card-body">
+								<#if attachments??>
+									<ul>
+										<#list attachments as attachment >
+											<li>${attachment.filename}
+										</#list>								
+									</ul>
+								</#if>
 							</div>
 						</div>
 													
-  						<div class="panel panel-default">
-  							<div class="panel-heading">Relations
+  						<div class="card">
+  							<div class="card-header"><b>Relations</b>
   								<button type="button" class="btn-small btn-primary float-sm-right" data-toggle="modal" data-target="#relations-modal"
 		    						title="Number: ${thingsRelated?size}">
-		  							Add relation
+		  							Relate
 								</button>
   							</div>
-							<div class="panel-body">
-								<#if thingsRelated??>
-		  							# ${thingsRelated?size}<br/>
-		  							<ul>
-						 	 			<li><#list thingsRelated as thingRelated >
-											<a href="${context}/thing/${thingRelated.id}" 
+  							
+  							<#if thingsRelated??>
+		  						<div class="card-body">
+									<ul>
+										<#list thingsRelated as thingRelated >
+						 	 				<li><a href="${context}/thing/${thingRelated.id}" 
 												class="list-group-item list-group-item-action"
 												>${thingRelated.humanKey} ${thingRelated.summary}</a>
+										</#list>
 									</ul>
-									</#list>	
-						 		</#if>
-							</div>
+								</div>
+							</#if>
 						</div>
 						
-						    					
-    					
     	  				
   						
 				 		
@@ -391,7 +395,7 @@
 			
 				<h5>Info</h5>
 					<ul>
-						<li><b>Type:</b> ${thing.thingType.name}
+						<li><b>Type:</b> ${thing.thingTypeName}
 					</ul>
 			
 				<h5>People</h5>

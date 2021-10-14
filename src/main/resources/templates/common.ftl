@@ -128,7 +128,7 @@
 	&nbsp; &nbsp;
 	
 
-		<a class="button btn btn-outline-primary" href='${context}/admin/';" target="_new"><svg
+		<a class="button btn btn-outline-primary" href="${context}/admin/" target="_new"><svg
 			width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear-fill"
 			fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 		  <path fill-rule="evenodd"

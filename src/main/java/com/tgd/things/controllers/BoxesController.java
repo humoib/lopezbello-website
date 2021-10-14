@@ -1,5 +1,6 @@
 package com.tgd.things.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,12 +16,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.tgd.things.beans.ThingPojo;
 import com.tgd.things.beans.db.Thing;
 import com.tgd.things.plugins.PhotoServicePlugin;
 import com.tgd.things.service.BoxService;
 import com.tgd.things.service.Initializer;
 import com.tgd.things.service.ThingService;
 import com.tgd.things.utils.FrontWrapper;
+import com.tgd.things.utils.ThingUtils;
 import com.tgd.things.utils.WebRequestUtils;
 
 @Controller
@@ -70,7 +73,8 @@ public class BoxesController {
 
 		List<Thing> things = thingService.getBoxThings(Long.parseLong(boxId));
 		LOGGER.debug("things size: {}", things.size());
-		model.addAttribute("searchedThings", things);
+		
+		model.addAttribute("searchedThings", ThingUtils.getdbList2pojoThing(things));
 
 		LOGGER.debug("111 --" + boxService.getById(boxIdLong).get());
 
@@ -88,7 +92,6 @@ public class BoxesController {
 			String content = photoServicePlugin.getAlbumsHtml();
 
 			model.addAttribute("content", content);
-
 		}
 
 		if (boxService.getById(boxIdLong).get().getView() == null

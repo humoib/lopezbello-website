@@ -2,6 +2,8 @@ package com.tgd.things.beans;
 
 import java.util.Date;
 
+import com.tgd.things.beans.db.security.User;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,12 +17,19 @@ public class ThingPojo {
 
 	protected String thingKey;
 
-	protected Long boxId;
+
+	protected Long thingTypeId;
+
+	protected String thingTypeName;
 
 	protected String humanKey;
 
 	// For REST - mandatory
 	protected String boxKey;
+
+	protected Long boxId;
+	
+	protected String boxName;
 
 	protected String summary;
 
@@ -32,8 +41,8 @@ public class ThingPojo {
 
 	protected Date updated;
 
-	Long thingTypeId;
-
+	protected User creator;
+	
 	public ThingPojo(Long id) {
 		this.id = id;
 		this.summary = "BLANK";

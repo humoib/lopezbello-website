@@ -1,5 +1,7 @@
 package com.tgd.things.controllers.things;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -23,16 +25,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.tgd.things.beans.CustomFieldReduced;
 import com.tgd.things.beans.CustomFieldValueReduced;
 import com.tgd.things.beans.NewCommentPojo;
 import com.tgd.things.beans.ThingPojo;
 import com.tgd.things.beans.db.Thing;
+import com.tgd.things.beans.db.ThingAttachment;
 import com.tgd.things.beans.db.ThingComment;
 import com.tgd.things.config.ThingsAppConstants;
 import com.tgd.things.controllers.BaseController;
@@ -43,6 +49,7 @@ import com.tgd.things.service.ThingCommentService;
 import com.tgd.things.service.ThingService;
 import com.tgd.things.system.ThingsSystem;
 import com.tgd.things.utils.ThingUtils;
+import com.tgd.things.utils.ThingsProperties;
 import com.tgd.things.utils.WebRequestUtils;
 
 import org.springframework.web.bind.annotation.PathVariable;
@@ -87,7 +94,13 @@ public class ThingsController extends BaseController {
 
 		pageObject = PageRequest.of(page, ThingsAppConstants.DEFAULT_PAGE_SIZE, Sort.by("updated").descending());
 		Page<Thing> allThings = thingService.findAll(pageObject);
-		model.addAttribute("searchedThings", allThings.getContent());
+
+		List<Thing> thingdb_list = allThings.getContent();
+		List<ThingPojo> thingPojo_list = new ArrayList();
+		for (Thing thingDb : thingdb_list) {
+			thingPojo_list.add(ThingUtils.db2pojoThing(thingDb));
+		}
+		model.addAttribute("searchedThings", thingPojo_list);
 
 		// pages
 		LOGGER.debug("actualPage: {}", page + 1);
@@ -106,7 +119,13 @@ public class ThingsController extends BaseController {
 		model.addAttribute("context", WebRequestUtils.getContext());
 		model.addAttribute("search", request.getParameter("search"));
 		String searchString = request.getParameter("search");
-		model.addAttribute("searchedThings", thingService.searchThings(searchString));
+
+		List<Thing> thingdb_list = thingService.searchThings(searchString);
+		List<ThingPojo> thingPojo_list = new ArrayList();
+		for (Thing thingDb : thingdb_list) {
+			thingPojo_list.add(ThingUtils.db2pojoThing(thingDb));
+		}
+		model.addAttribute("searchedThings", thingPojo_list);
 
 		return THINGS_PAGE;
 	}
@@ -128,26 +147,19 @@ public class ThingsController extends BaseController {
 			// thing by string key
 			thing = thingService.getThingByKey(String.valueOf(id));
 			LOGGER.debug("thing: {}", thing.toString());
-			model.addAttribute(THING_PAGE, thing);
+			model.addAttribute(THING_PAGE, ThingUtils.db2pojoThing(thing));
 		} else {
 			// thing by long id
 			Optional<Thing> thingOptional = thingService.getThing(Long.parseLong(id));
 			thing = thingOptional.get();
 			LOGGER.debug("thing: {}", thing.toString());
-			model.addAttribute(THING_PAGE, thingOptional.get());
+			model.addAttribute(THING_PAGE, ThingUtils.db2pojoThing(thingOptional.get()));
 		}
+		model.addAttribute("thingId", thing.getId());
 
 		// box
 		model.addAttribute("box", thing.getBox());
 
-		// Object with fields
-		// HashMap fields = new HashMap();
-
-		List<CustomFieldValueReduced> fields = customFieldsService.getAllFieldValuesFromThing(thing);
-		for (CustomFieldValueReduced field : fields) {
-			LOGGER.debug("FIELD ---> id: {} name: {} type: {} value: {}", field.getKey(), field.getName(),
-					field.getType(), field.getValue());
-		}
 		/*
 		 * Iterable<CustomField> myFields =
 		 * customFieldsService.getCustomFields(thing.get().getThingType()); for
@@ -157,8 +169,7 @@ public class ThingsController extends BaseController {
 		 * CustomFieldReduced cfReduced = new CustomFieldReducedImpl (); cfReduced. }
 		 */
 
-		model.addAttribute("thingId", thing.getId());
-
+		// Comments
 		List<ThingComment> comments = (List<ThingComment>) thingCommentService.getComments(thing);
 		if (comments != null) {
 			LOGGER.debug("COMMENTS: size:{}", comments.size());
@@ -166,10 +177,21 @@ public class ThingsController extends BaseController {
 				LOGGER.debug("Comment ->" + comment.getComment());
 			}
 		}
-
 		model.addAttribute("thingComments", comments);
+
+		// Fields
+		List<CustomFieldValueReduced> fields = customFieldsService.getAllFieldValuesFromThing(thing);
+		for (CustomFieldValueReduced field : fields) {
+			LOGGER.debug("FIELD ---> id: {} name: {} type: {} value: {}", field.getKey(), field.getName(),
+					field.getType(), field.getValue());
+		}
 		model.addAttribute("fields", fields);
 
+		// ATtachments
+		List<ThingAttachment> attachments = thingService.getAttachments(thing.getId());
+		model.addAttribute("attachments", attachments);
+
+		// Relations
 		addRelations(model, String.valueOf(thing.getId()));
 
 		// fields.putAll(FieldsManager.getViewFields(thing.get().getThingType()));
@@ -345,7 +367,7 @@ public class ThingsController extends BaseController {
 
 		Optional<Thing> thing = thingService.getThing(Long.parseLong(id));
 		LOGGER.debug("thing: {}", thing);
-		model.addAttribute(THING_PAGE, thing.get());
+		model.addAttribute("thing", ThingUtils.db2pojoThing(thing.get()));
 
 		model.addAttribute("boxId", thing.get().getBox().getId());
 		model.addAttribute("thingId", thing.get().getId());
@@ -375,6 +397,71 @@ public class ThingsController extends BaseController {
 		model.addAttribute("operation", "edit");
 
 		return THING_PAGE;
+	}
+
+	@RequestMapping(value = { "/thing/attach/{id}" }, method = RequestMethod.GET)
+	public String attachFile(Model model, HttpServletRequest request, HttpServletResponse response,
+			@PathVariable String id) {
+		LOGGER.debug("## GET ThingsController: attach file to thing");
+
+		model.addAttribute("context", WebRequestUtils.getContext());
+
+		Optional<Thing> thing = thingService.getThing(Long.parseLong(id));
+		LOGGER.debug("thing: {}", thing);
+		model.addAttribute("thing", ThingUtils.db2pojoThing(thing.get()));
+
+		model.addAttribute("boxId", thing.get().getBox().getId());
+		model.addAttribute("thingId", thing.get().getId());
+		model.addAttribute("thingTypeId", thing.get().getThingType().getId());
+
+		// box
+		model.addAttribute("box", thing.get().getBox());
+
+		model.addAttribute("operation", "attach");
+
+		return THING_ATTACH_FILE_PAGE;
+	}
+
+	@RequestMapping(value = { "/thing/attach" }, method = RequestMethod.POST, consumes = {
+			MediaType.MULTIPART_FORM_DATA_VALUE })
+	public String attachFilePost(ThingPojo thingform, Model model, HttpServletRequest request,
+			HttpServletResponse response, @RequestPart MultipartFile file2attach) {
+		LOGGER.debug("## POST ThingsController: attach file to thing");
+
+		model.addAttribute("context", WebRequestUtils.getContext());
+
+		LOGGER.debug("thingId: {}", request.getParameter("thingId"));
+		Long thingId = Long.parseLong(request.getParameter("thingId"));
+
+		Optional<Thing> thing = thingService.getThing(Long.parseLong(request.getParameter("thingId")));
+		// model.addAttribute("thing", ThingUtils.db2pojoThing(myThing.get()));
+
+		// FILE
+		LOGGER.debug("file2attach: {}", file2attach);
+
+		LOGGER.debug("things.data.folder: {}", ThingsProperties.getProperty("things.data.folder"));
+
+		File directory = new File(ThingsProperties.getProperty("things.data.folder") + File.separator
+				+ thing.get().getBox().getBoxKey() + File.separator + thing.get().getId());
+		if (!directory.exists()) {
+			directory.mkdirs();
+			// If you require it to make the entire directory path including parents,
+			// use directory.mkdirs(); here instead.
+		}
+
+		File dest = new File(
+				ThingsProperties.getProperty("things.data.folder") + File.separator + thing.get().getBox().getBoxKey()
+						+ File.separator + thing.get().getId() + File.separator + file2attach.getOriginalFilename());
+		try {
+			file2attach.transferTo(dest);
+
+			thingService.addAttachment(thingId, file2attach.getOriginalFilename());
+
+		} catch (IllegalStateException | IOException e) {
+			e.printStackTrace();
+		}
+
+		return "redirect:" + WebRequestUtils.getContext() + "/" + THING_PAGE + "/" + request.getParameter("thingId");
 	}
 
 	/**

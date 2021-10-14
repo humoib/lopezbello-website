@@ -19,9 +19,9 @@
 	  	<#if searchedThings??>
 		  	<#list searchedThings as thing >
 			    <tr>
-			      <td><p class="badge badge-primary">${thing.thingType.name}</p></td>
-			      <td scope="row"><a href='${context}/thing/${thing.id}'>${thing.box.boxKey}-${thing.key}</a></td>
-			      <td><a href='${context}/thing/${thing.id}'>${thing.summary}</a></td>
+			      <td><p class="badge badge-primary">${thing.thingTypeName}</p></td>
+			      <td scope="row"><a href='${context}/thing/${thing.thingKey}'>${thing.boxKey}-${thing.key?string.computer}</a></td>
+			      <td><a href='${context}/thing/${thing.thingKey}'>${thing.summary}</a></td>
 			      <td>${thing.creator.fullname!"none"}</td>
 			      <td>${thing.created?date}</td>
 			      <td>

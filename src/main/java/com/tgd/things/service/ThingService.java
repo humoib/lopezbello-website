@@ -21,8 +21,10 @@ import com.tgd.things.beans.ThingPojo;
 import com.tgd.things.beans.ThingPojoSearcher;
 import com.tgd.things.beans.db.Box;
 import com.tgd.things.beans.db.Thing;
+import com.tgd.things.beans.db.ThingAttachment;
 import com.tgd.things.beans.db.ThingType;
 import com.tgd.things.repository.BoxRepository;
+import com.tgd.things.repository.ThingAttachmentRepository;
 import com.tgd.things.repository.ThingRelationRepository;
 import com.tgd.things.repository.ThingRepository;
 import com.tgd.things.repository.ThingTypeRepository;
@@ -49,10 +51,11 @@ public class ThingService {
 	@Autowired
 	protected ThingRelationRepository thingRelationRepository;
 
+	@Autowired
+	protected ThingAttachmentRepository thingAttachmentRepository;
+
 	public Page<Thing> findAll(Pageable pageable) {
-
 		Page<Thing> ret = thingRepository.findAll(pageable);
-
 		return ret;
 	}
 
@@ -121,7 +124,7 @@ public class ThingService {
 		if (thingPojo.getKey() == null) {
 			key = boxRepository.getLastKey(thingPojo.getBoxId());
 			if (key == null) {
-				key = (long)0;
+				key = (long) 0;
 			} else {
 				key++;
 			}
@@ -199,6 +202,36 @@ public class ThingService {
 			return 0;
 		}
 		return -1;
+	}
+
+	/**
+	 * 
+	 * 
+	 * 
+	 * @param thingId
+	 * @return
+	 */
+	public List<ThingAttachment> getAttachments(Long thingId) {
+		return thingAttachmentRepository.getAttachemnts(thingId);
+	}
+
+	/**
+	 * 
+	 * 
+	 * @param thingId
+	 * @param filename
+	 * @return
+	 */
+	public int addAttachment(Long thingId, String filename) {
+
+		ThingAttachment thingAttachment = new ThingAttachment();
+		thingAttachment.setActor(null);
+		thingAttachment.setFilename(filename);
+		thingAttachment.setThing(getThing(thingId).get());
+		thingAttachment.setCreated(new Date());
+
+		thingAttachmentRepository.save(thingAttachment);
+		return 0;
 	}
 
 }

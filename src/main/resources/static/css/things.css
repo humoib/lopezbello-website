@@ -1,7 +1,13 @@
 
-.panel > .panel-heading {
-    background-image: none;
-    background-color: lightgray;
-    color: black;
-}
+
+.card {
+      border: 1px solid #ccc;
+      background-color: #f4f4f4;
+      padding: 2px;
+      margin-bottom: 0px;
+    }
+
+.card-body {
+     padding: 2px;
+ }
 
