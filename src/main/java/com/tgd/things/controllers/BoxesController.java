@@ -64,16 +64,18 @@ public class BoxesController {
 		LOGGER.debug("## GET BoxesController: openBox");
 		LOGGER.debug("boxId: {}", boxId);
 
+		Long boxIdLong = Long.parseLong(boxId);
+		
 		model.addAttribute("context", WebRequestUtils.getContext());
 
 		List<Thing> things = thingService.getBoxThings(Long.parseLong(boxId));
 		LOGGER.debug("things size: {}", things.size());
 		model.addAttribute("searchedThings", things);
 
-		LOGGER.debug("111 --" + boxService.getById(boxId).get());
+		LOGGER.debug("111 --" + boxService.getById(boxIdLong).get());
 
 		// TDDO : plugin
-		if (boxService.getById(boxId).get().getBoxKey().equals("PHOTO")) {
+		if (boxService.getById(boxIdLong).get().getBoxKey().equals("PHOTO")) {
 			LOGGER.debug("Llamando a PhotoServicePlugin...");
 
 			LOGGER.debug("HELLO gcsRoot: {}", gcsRoot);
@@ -89,13 +91,13 @@ public class BoxesController {
 
 		}
 
-		if (boxService.getById(boxId).get().getView() == null
-				|| boxService.getById(boxId).get().getView().trim().equals("")) {
-			LOGGER.debug("Box View: SIN VISTA {}", boxService.getById(boxId).get().getView());
+		if (boxService.getById(boxIdLong).get().getView() == null
+				|| boxService.getById(boxIdLong).get().getView().trim().equals("")) {
+			LOGGER.debug("Box View: SIN VISTA {}", boxService.getById(boxIdLong).get().getView());
 			return BaseController.THINGS_PAGE;
 		} else {
-			LOGGER.debug("Box View: {}", boxService.getById(boxId).get().getView());
-			return "boxes/" + boxService.getById(boxId).get().getView();
+			LOGGER.debug("Box View: {}", boxService.getById(boxIdLong).get().getView());
+			return "boxes/" + boxService.getById(boxIdLong).get().getView();
 		}
 
 	}

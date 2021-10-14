@@ -27,7 +27,7 @@ public class Thing {
 	private Box box;
 
 	@Column(name = "THI_KEY", length = 10, nullable = false)
-	private Integer key;
+	private Long key;
 
 	@Column(name = "THI_SUMMARY", length = 500, nullable = false)
 	private String summary;

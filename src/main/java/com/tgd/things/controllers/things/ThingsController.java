@@ -254,7 +254,7 @@ public class ThingsController extends BaseController {
 		model.addAttribute("thingTypeId", thingTypeId);
 
 		// box
-		model.addAttribute("box", boxService.getById(boxId).get());
+		model.addAttribute("box", boxService.getById(Long.parseLong(boxId)).get());
 
 		// Fields
 		LOGGER.trace("Thing Type: {}", thingService.findThingTypeById(Long.parseLong(thingTypeId)));
@@ -308,7 +308,7 @@ public class ThingsController extends BaseController {
 		// TODO:
 
 		ThingPojo addThing = new ThingPojo();
-		addThing.setBoxId(Integer.parseInt(request.getParameter("boxId")));
+		addThing.setBoxId(Long.parseLong(request.getParameter("boxId")));
 		addThing.setSummary(request.getParameter("summary"));
 		addThing.setAnalysis(request.getParameter("analysis"));
 		addThing.setThingTypeId(Long.parseLong(request.getParameter("thingTypeId")));
@@ -410,7 +410,7 @@ public class ThingsController extends BaseController {
 		ThingPojo editThing = new ThingPojo();
 		editThing.setId(thing.getId());
 		editThing.setKey(thing.getKey());
-		editThing.setBoxId(thing.getBox().getId().intValue());
+		editThing.setBoxId(thing.getBox().getId().longValue());
 		editThing.setThingTypeId(thing.getThingType().getId());
 		editThing.setSummary(request.getParameter("summary"));
 		editThing.setAnalysis(request.getParameter("analysis"));

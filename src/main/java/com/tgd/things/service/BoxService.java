@@ -38,11 +38,14 @@ public class BoxService {
 		return boxRepository.findAll();
 	}
 
-	public Optional<Box> getById(String boxId) {
-		// return boxRepository.findById(boxId);
-		return boxRepository.findById(Long.parseLong(boxId));
+	public Optional<Box> getById(Long boxId) {
+		return boxRepository.findById(boxId);
 	}
 
+	public Optional<Box> getByBoxKey(String boxKey) {
+		return boxRepository.findByBoxKey(boxKey);
+	}
+	
 	public Iterable<BoxPojo> getAllBoxesWithThingTypes() {
 		Iterable<Box> boxes = boxRepository.findAll();
 
@@ -57,7 +60,7 @@ public class BoxService {
 		return boxesPojo;
 	}
 
-	public Integer getLastKey(Integer boxId) {
+	public Long getLastKey(Long boxId) {
 		return boxRepository.getLastKey(boxId);
 	}
 
@@ -74,5 +77,6 @@ public class BoxService {
 
 		return boxRepository.save(box);
 	}
+
 
 }

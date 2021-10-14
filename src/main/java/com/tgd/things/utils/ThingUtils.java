@@ -18,7 +18,7 @@ public class ThingUtils {
 		pojo.setKey(thingDb.getKey());
 		pojo.setThingKey(thingDb.getBox().getBoxKey() + "-" + thingDb.getId());
 
-		pojo.setBoxId(thingDb.getBox().getId().intValue());
+		pojo.setBoxId(thingDb.getBox().getId());
 		pojo.setThingTypeId(thingDb.getThingType().getId());
 		pojo.setSummary(thingDb.getSummary());
 		pojo.setCreated(thingDb.getCreated());

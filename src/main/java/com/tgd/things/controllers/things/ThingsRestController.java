@@ -3,6 +3,7 @@ package com.tgd.things.controllers.things;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -24,8 +25,10 @@ import com.google.gson.Gson;
 import com.tgd.things.beans.CustomFieldReduced;
 import com.tgd.things.beans.RestResponse;
 import com.tgd.things.beans.ThingPojo;
+import com.tgd.things.beans.db.Box;
 import com.tgd.things.beans.db.Thing;
 import com.tgd.things.managers.FieldsManager;
+import com.tgd.things.service.BoxService;
 import com.tgd.things.service.CustomFieldsService;
 import com.tgd.things.service.ThingService;
 import com.tgd.things.utils.ThingUtils;
@@ -39,6 +42,9 @@ public class ThingsRestController {
 	ThingService thingService;
 
 	@Autowired
+	BoxService boxService;
+
+	@Autowired
 	CustomFieldsService customFieldsService;
 
 	static final String REST_VERSION = "rest/api/1";
@@ -50,12 +56,12 @@ public class ThingsRestController {
 	public RestResponse getThings(@RequestParam(value = "name", defaultValue = "World") String summary, String id) {
 		LOGGER.trace("## REST getThings");
 		LOGGER.debug("Id: {}", id);
-		
-		if(id!=null && id.contains("-")){
+
+		if (id != null && id.contains("-")) {
 			// puede ser una thing concreta
-		}else {
+		} else {
 			// se pide por ID?
-			
+
 		}
 
 		List<Object> ret = new ArrayList();
@@ -84,7 +90,18 @@ public class ThingsRestController {
 		LOGGER.trace("request.getServerName(): {}", request.getServerName());
 		LOGGER.trace("http Entity: {}", body);
 
-		ThingPojo saveThing = new Gson().fromJson(body, ThingPojo.class);
+		ThingPojo requestThing = new Gson().fromJson(body, ThingPojo.class);
+
+		Optional<Box> box = null;
+		if (requestThing.getBoxKey() != null) {
+			box = boxService.getByBoxKey(requestThing.getBoxKey());
+			LOGGER.debug("BOX::: " + box);
+		} else if (requestThing.getBoxId() != null) {
+			box = boxService.getById(requestThing.getBoxId());
+		} else {
+			LOGGER.error("Unable to create THING without ThingKey or BoxId");
+		}
+		requestThing.setBoxId(box.get().getId());
 
 		// ThingPojo saveThing = new ThingPojo();
 		// saveThing.setBoxId(Integer.parseInt(boxId));
@@ -93,7 +110,7 @@ public class ThingsRestController {
 
 		// saveThing = thing;
 
-		Thing saved = thingService.saveThing(saveThing);
+		Thing saved = thingService.saveThing(requestThing);
 		LOGGER.trace("saved: {}", saved);
 
 		// fields
@@ -102,7 +119,7 @@ public class ThingsRestController {
 		LOGGER.trace("hashMap: {}", hashMap);
 
 		FieldsManager fieldsManager = new FieldsManager(thingService, customFieldsService);
-		Thing myThing = fieldsManager.updateFieldValues(hashMap, saved, saveThing, null);
+		Thing myThing = fieldsManager.updateFieldValues(hashMap, saved, requestThing, null);
 
 		/*
 		 * List<CustomFieldReduced> fields = customFieldsService

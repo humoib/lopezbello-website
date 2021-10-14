@@ -9,19 +9,23 @@ import lombok.Setter;
 @Setter
 public class ThingPojo {
 
-	Long id;
+	protected Long id;
 
-	Integer key;
+	protected Long key;
 
-	String thingKey;
+	protected String thingKey;
 
-	Integer boxId;
+	protected Long boxId;
 
-	String humanKey;
+	protected String humanKey;
+
+	// For REST - mandatory
+	protected String boxKey;
 
 	protected String summary;
 
 	protected String analysis;
+
 	protected String description;
 
 	protected Date created;

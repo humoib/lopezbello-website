@@ -106,14 +106,22 @@ public class ThingService {
 
 		Thing thing = new Thing();
 		thing.setId(thingPojo.getId());
+		/*
+		 * Optional<Box> box = null; if (thingPojo.getThingKey() != null) { box =
+		 * boxRepository.findByBoxKey(thingPojo.getThingKey()); } else if
+		 * (thingPojo.getBoxId() != null) { box = boxRepository.findById((long)
+		 * thingPojo.getBoxId()); } else {
+		 * LOGGER.error("Unable to create THING without ThingKey or BoxId"); return
+		 * null; }
+		 */
 		thing.setBox(boxRepository.findById((long) thingPojo.getBoxId()).get());
 
-		Integer key;
+		Long key;
 		LOGGER.debug("thingPojo.getKey(): {}", thingPojo.getKey());
 		if (thingPojo.getKey() == null) {
 			key = boxRepository.getLastKey(thingPojo.getBoxId());
 			if (key == null) {
-				key = 0;
+				key = (long)0;
 			} else {
 				key++;
 			}
