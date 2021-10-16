@@ -103,6 +103,11 @@ public class ThingsController extends BaseController {
 		}
 		model.addAttribute("searchedThings", thingPojo_list);
 
+		// Deleted things
+		if (request.getParameter("deletedThing") != null) {
+			model.addAttribute("deletedThing", "1");
+		}
+		
 		// pages
 		LOGGER.debug("actualPage: {}", page + 1);
 		model.addAttribute("actualPage", page + 1);
@@ -562,6 +567,54 @@ public class ThingsController extends BaseController {
 		LOGGER.debug("---> " + "redirect:" + WebRequestUtils.getContext() + "/" + THINGS_PAGE);
 
 		return "redirect:" + WebRequestUtils.getContext() + "/" + THINGS_PAGE;
+	}
+
+	/**
+	 * 
+	 * @param thingform
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = { "/thing/delete/{id}" }, method = RequestMethod.GET)
+	public String deleteThing(ThingPojo thingform, Model model, HttpServletRequest request,
+			HttpServletResponse response, @PathVariable String id) {
+		LOGGER.debug("## GET ThingsController: Delete thing");
+
+		model.addAttribute("context", WebRequestUtils.getContext());
+
+		LOGGER.debug("thingform: {}", thingform.toString());
+
+		Locale currentLocale = LocaleContextHolder.getLocale();
+		LOGGER.info("Locale: {}", currentLocale);
+
+		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(currentLocale);
+		otherSymbols.setDecimalSeparator(',');
+		DecimalFormat numberFormat = (DecimalFormat) DecimalFormat.getInstance(LocaleContextHolder.getLocale());
+		numberFormat.setDecimalFormatSymbols(otherSymbols);
+
+		// Get thing from DB
+		Thing thing = thingService.getThing(Long.parseLong(id)).get();
+
+		thingService.dropRelatedThings(thing);
+
+		// delete fields
+		// TODO
+
+		// delete attachements
+// TODO
+
+		// Finally, delete the thing
+		thingService.deleteThing(thing);
+
+		// update field values
+		// FieldsManager fieldsManager = new FieldsManager(thingService,
+		// customFieldsService);
+		// Thing myThing = fieldsManager.updateFieldValues(request, thing, null, id);
+
+		return "redirect:" + WebRequestUtils.getContext() + "/" + THINGS_PAGE + "?deletedThing=" + thing.getSummary();
 	}
 
 	// newComment

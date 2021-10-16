@@ -52,6 +52,7 @@
 				<div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
 				    <button type="button" class="btn btn-primary"
 				    	onclick="window.location.href = '${context}/thing/edit/${thing.id}';">Edit</button>
+				    
 				    <button type="button" class="btn btn-primary">Assign</button>
 				    
 				    <button type="button" class="btn btn-secondary"
@@ -62,8 +63,8 @@
 				      More
 				    </button>
 				    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-				      <a class="dropdown-item" href="#">Delete</a>
-				      <a class="dropdown-item" href="#">Dropdown link</a>
+				    	<a class="dropdown-item" href="${context}/thing/delete/${thing.id}">Delete</a>
+				    	<!--a class="dropdown-item" href="#">Dropdown link</a-->
 				    </div>
 				</div>
 					

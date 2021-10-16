@@ -2,6 +2,12 @@
 
 <@c.page title="Thing">    
 	
+	<#if deletedThing??>
+		<div class="alert alert-success" data-dismiss="alert" role="alert">
+	  	Thing deleted sucessfully
+		</div>
+	</#if>
+	
 	<table class="table table-sm table-bordered table-hover table table-striped">
 	  <thead>
 	    <tr>

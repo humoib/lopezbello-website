@@ -25,7 +25,11 @@
       <div class="jumbotron">
         <div class="container">
         	<div class="d-flex flex-row-reverse">
+        		<#if Session.SPRING_SECURITY_CONTEXT?? >
+				<a href="/main" class="btn btn-primary">Logged in as ${Session.SPRING_SECURITY_CONTEXT.authentication.name} - Go to th1ngs!</a>&nbsp;&nbsp;
+				<#else>        		
 				<a href="/login" class="btn btn-primary">Login</a>&nbsp;&nbsp;&nbsp;
+				</#if>
 				<a href="/signup" class="btn btn-success">Sign up here!</a>
 			</div>		
         	

@@ -77,6 +77,14 @@ public class ThingService {
 		return mybox.get().getBoxKey() + "-" + mything.get().getKey();
 	}
 
+	/**
+	 * 
+	 * @param thing
+	 */
+	public void deleteThing(Thing thing) {
+		thingRepository.delete(thing);
+	}
+
 	// TODO: Se debe reducir a un objeto más ligero (ThingReduced)
 	public Iterable<Thing> getAllThings() {
 		return thingRepository.findAll();
@@ -184,6 +192,13 @@ public class ThingService {
 			related2send.add(tmp);
 		}
 		return related2send;
+	}
+
+	public int dropRelatedThings(Thing thing) {
+		LOGGER.debug("## dropRelatedThings thing: " + thing.getId());
+		int numberRows = thingRepository.deleteRelationsById(thing.getId());
+		LOGGER.debug("Relations deleted: {}", numberRows);
+		return numberRows;
 	}
 
 	public int relateThings(String source, String target) {

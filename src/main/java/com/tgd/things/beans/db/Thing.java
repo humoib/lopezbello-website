@@ -23,7 +23,7 @@ public class Thing {
 	@Column(name = "THI_ID", length = 20, nullable = false)
 	private Long id;
 
-	@ManyToOne(optional = false, cascade = CascadeType.ALL)
+	@ManyToOne(optional = false, cascade = CascadeType.REFRESH)
 	private Box box;
 
 	@Column(name = "THI_KEY", length = 10, nullable = false)
