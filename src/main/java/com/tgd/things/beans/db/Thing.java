@@ -1,7 +1,6 @@
 package com.tgd.things.beans.db;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.*;
 
@@ -33,7 +32,7 @@ public class Thing {
 	private String summary;
 
 	@ManyToOne(cascade = CascadeType.ALL)
-	private ThingStatus status;
+	private Status status;
 
 	@Lob
 	@Basic(fetch = FetchType.LAZY)

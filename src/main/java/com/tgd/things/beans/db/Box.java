@@ -37,12 +37,17 @@ public class Box {
 
 	// 1 - Stuff
 	// 2 - Process
-	// 3 - Software
-	// 4 - Service Management
-	// 5 - Photo
-	// 6 - Places
+	// 3 - Project Management
+	// 4 - Software
+	// 5 - Service Management
+	// 6 - Photo
+	// 80 - Places
 	@Column(name = "BOX_TYPE", length = 50)
 	private Integer type;
+
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "BOX_STATUS_SCHEMA")
+	private ThingStatusSchema statusSchema;
 
 	@Column(name = "BOX_VIEW", length = 50)
 	private String view;

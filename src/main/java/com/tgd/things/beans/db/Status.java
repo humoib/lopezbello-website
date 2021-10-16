@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ThingStatus {
+public class Status {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,18 +29,18 @@ public class ThingStatus {
 	@Column(name = "STA_CATEGORY", nullable = false)
 	private int category;
 
-	@Column(name = "STA_DESCRIPTION", nullable = false)
+	@Column(name = "STA_DESCRIPTION")
 	private String description;
 
 	@Column(name = "STA_CREATED_DATETIME", nullable = false)
 	private Date created;
 
-	public ThingStatus() {
+	public Status() {
 	}
 
 	@Override
 	public String toString() {
-		return " Thing Status {" + "id=" + id + "'}'";
+		return " Status {" + "id=" + id + "'}'";
 	}
 
 }

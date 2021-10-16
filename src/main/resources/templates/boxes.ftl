@@ -1,6 +1,22 @@
 <#import "common.ftl" as c />
 
 <@c.page title="Boxes">
+
+ 	<div class="float-left">
+ 	
+ 	<h2>Boxes</h2>
+ 		<p>We've got boxes for store things. Each on its box</p>
+	</div>
+
+ 	<div class="d-flex flex-row-reverse">
+ 		<button type="button" class="btn btn-primary float-lg-right" float="right"
+ 			onclick="window.location.href = '${context}/box/newfirst';"
+ 			>
+			Add Box
+		</button>
+	</div>
+ 	
+ 	<hr/>
  	
 	<table class="table table-sm">
 	  <thead>

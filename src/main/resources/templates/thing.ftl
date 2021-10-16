@@ -32,7 +32,6 @@
  	
 		<div class="col-2" id="relations">
 			<h3><a href="${context}/box/${box.id}">${box.name}</a></h3>
-			
 		</div>
 		
 		<!-- CENTRAL -->
