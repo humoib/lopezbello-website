@@ -18,15 +18,15 @@ public interface ThingRepository extends PagingAndSortingRepository<Thing, Long>
 	@Query("SELECT t FROM Thing t WHERE BOX_BOX_ID = ?1")
 	List<Thing> getBoxThings(Long id);
 
-	@Query(value = "(SELECT t.THI_ID as id, t.THI_SUMMARY as summary, t.THI_CREATED as created FROM THING t "
+	@Query(value = "(SELECT t.THI_ID as id, t.THI_SUMMARY as summary, t.THI_CREATED_DATETIME as created FROM THING t "
 			+ "RIGHT JOIN THING_RELATION source on source.SOURCETHINGID = t.THI_ID "
 			+ " WHERE source.TARGETTHINGID= ?1 ) UNION "
-			+ "( SELECT t.THI_ID as id, t.THI_SUMMARY as summary, t.THI_CREATED as created FROM THING t "
+			+ "( SELECT t.THI_ID as id, t.THI_SUMMARY as summary, t.THI_CREATED_DATETIME as created FROM THING t "
 			+ "RIGHT JOIN THING_RELATION target on target.TARGETTHINGID = t.THI_ID "
 			+ " WHERE target.SOURCETHINGID= ?1 )", nativeQuery = true)
 	public List<ThingPojoSearcher> findRelatedById(Long thingId);
 
-	@Query(value = "SELECT t.THI_ID as id, t.THI_SUMMARY as summary, t.THI_CREATED as created FROM THING t "
+	@Query(value = "SELECT t.THI_ID as id, t.THI_SUMMARY as summary, t.THI_CREATED_DATETIME as created FROM THING t "
 			+ "WHERE THI_SUMMARY LIKE '%?1%'", nativeQuery = true)
 	public List<ThingPojoSearcher> searchByText(Long thingId);
 

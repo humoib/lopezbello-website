@@ -86,6 +86,7 @@ public class ThingsController extends BaseController {
 			page = 0;
 		}
 
+		LOGGER.debug("WebRequestUtils.getContext(): {}", WebRequestUtils.getContext());
 		model.addAttribute("context", WebRequestUtils.getContext());
 		request.getSession().setAttribute("contextpath", request.getContextPath());
 

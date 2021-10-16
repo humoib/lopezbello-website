@@ -28,10 +28,10 @@ public class ProgressValve extends ValveBase {
 	private void removeMyself() {
 		LOGGER.debug("Application started, de-registering");
 		LOGGER.debug("getConainer(): " + getContainer());
-		
-		// TODO getResponse devuelve null  en APACHE TOMCAT
+
+		// TODO getResponse devuelve null en APACHE TOMCAT
 		getContainer().getPipeline().removeValve(this);
-		
+
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class ProgressValve extends ValveBase {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			break;
 		default:
-			sendHtml(response, "loading.html");
+			sendHtml(response, "/loading.html");
 		}
 	}
 

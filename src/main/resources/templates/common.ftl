@@ -82,11 +82,11 @@
 				<!-- li class="nav-item"><a class="nav-link" href="/">Dashboards</a></li-->
 
 				<li class="nav-item ">
-					<!-- active --> <a class="nav-link" href="${context}/garage">Boxes</a>
+					<!-- active --> <a class="nav-link" href="${context}/garage"><@spring.message code="boxes"/></a>
 					<!--  <span class="sr-only">(current)</span> -->
 			</li>
 				<li class="nav-item "><a class="nav-link"
-					href="${context}/things">Things </span>
+					href="${context}/things"><@spring.message code="Things"/></span>
 				</a> <span class="sr-only">(current) </li>
 
 				<!--li class="nav-item">
@@ -96,7 +96,7 @@
 				<div class="btn-group" role="group"
 				aria-label="Default button group">
 					<button type="button" class="btn btn-secondary"
-					onclick="window.location.href = '${context}/thing/newfirst';">New</button>
+					onclick="window.location.href='${context}/thing/newfirst';"><@spring.message code="button.new"/></button>
 			</div>
 			
 		</ul>

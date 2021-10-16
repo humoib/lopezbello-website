@@ -1,6 +1,5 @@
 package com.tgd.things.controllers;
 
-import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,8 +34,6 @@ public class MainController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
 
-	private static final String PATH = "/error";
-
 	@Autowired
 	private ApplicationContext applicationContext;
 
@@ -46,7 +43,8 @@ public class MainController {
 	@Autowired
 	ThingService thingService;
 
-	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
+// "/",
+	@RequestMapping(value = { "", "/home" }, method = RequestMethod.GET)
 	public String index(Model model) {
 		LOGGER.trace("## HOME ");
 

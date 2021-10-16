@@ -29,7 +29,7 @@
 				<a href="/signup" class="btn btn-success">Sign up here!</a>
 			</div>		
         	
-          	<h1 class="display-3">Welcome to th1ngs!</h1>
+          	<h1 class="display-3"><@spring.message code="home.welcome"/> th1ngs!</h1>
           	<p>Manage everyThing with all the flexibility</p>
           	<p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more »</a></p>
           	

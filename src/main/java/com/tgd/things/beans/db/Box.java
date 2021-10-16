@@ -26,7 +26,7 @@ public class Box {
 	@Column(name = "BOX_NAME", length = 500, nullable = false)
 	private String name;
 
-	@Column(name = "BOX_CREATED", nullable = false)
+	@Column(name = "BOX_CREATED_DATETIME", nullable = false)
 	private Date created;
 
 	@ManyToOne(optional = false)

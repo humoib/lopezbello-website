@@ -46,13 +46,16 @@ public class Thing {
 	// (optional = false)
 	private User creator;
 
-	@Column(name = "THI_CREATED", nullable = false)
+	@Column(name = "THI_CREATED_DATETIME", nullable = false)
 	private Date created;
 
-	@Column(name = "THI_UPDATED")
+	@Column(name = "THI_UPDATED_DATETIME")
 	private Date updated;
 
-	@Column(name = "THI_CLOSED")
+	@Column(name = "THI_DELIVERY_DATETIME")
+	private Date delivery;
+
+	@Column(name = "THI_CLOSED_DATETIME")
 	private Date closed;
 
 	@ManyToOne(optional = false)

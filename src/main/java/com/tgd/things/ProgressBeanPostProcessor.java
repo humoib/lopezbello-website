@@ -57,4 +57,5 @@ class ProgressBeanPostProcessor implements BeanPostProcessor, ApplicationListene
 	static Observable<String> observe() {
 		return beans;
 	}
+
 }

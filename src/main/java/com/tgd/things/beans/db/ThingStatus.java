@@ -32,7 +32,7 @@ public class ThingStatus {
 	@Column(name = "STA_DESCRIPTION", nullable = false)
 	private String description;
 
-	@Column(name = "STA_CREATED", nullable = false)
+	@Column(name = "STA_CREATED_DATETIME", nullable = false)
 	private Date created;
 
 	public ThingStatus() {

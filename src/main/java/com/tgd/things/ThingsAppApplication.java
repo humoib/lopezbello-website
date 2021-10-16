@@ -1,6 +1,7 @@
 package com.tgd.things;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 import com.tgd.things.config.ThingsAppProperties;
 
@@ -40,7 +45,8 @@ public class ThingsAppApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		ConfigurableApplicationContext context = SpringApplication.run(ThingsAppApplication.class, args);
-		displayAllBeans();
+		
+		//displayAllBeans();
 
 		// if (Arrays.asList(env.getActiveProfiles()).contains("dev")) {
 		// LOGGER.debug("HELLO");
@@ -49,7 +55,6 @@ public class ThingsAppApplication extends SpringBootServletInitializer {
 		ThingsAppProperties bean = context.getBean(ThingsAppProperties.class);
 		bean.printVariable();
 
-		
 	}
 
 	@Profile("dev")
@@ -58,7 +63,6 @@ public class ThingsAppApplication extends SpringBootServletInitializer {
 		LOGGER.debug("-------------------------------- ApplicationRunner ...");
 
 		return null;
-
 	}
 
 	/**
@@ -69,7 +73,7 @@ public class ThingsAppApplication extends SpringBootServletInitializer {
 		if (applicationContext != null) {
 			String[] allBeanNames = applicationContext.getBeanDefinitionNames();
 			for (String beanName : allBeanNames) {
-				LOGGER.info("BEAN: {}", beanName);
+				LOGGER.trace("BEAN: {}", beanName);
 			}
 		}
 	}

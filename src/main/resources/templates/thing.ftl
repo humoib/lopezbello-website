@@ -5,9 +5,7 @@
 	<script>
 	
 	function relates(){
-	
 		console.log("#thingId:"+$("#thingId").val());
-		
 		$.ajax({
    			type: "PUT",
 		    contentType: "application/json; charset=utf-8",
@@ -20,7 +18,6 @@
     		error: function (xhr, textStatus, errorThrown) { 
     			console.error("ERROR: "+ xhr.status + ': ' + xhr.statusText +' '+ textStatus +' '+ errorThrown);
     		}
- 
 		});
 	}
 	

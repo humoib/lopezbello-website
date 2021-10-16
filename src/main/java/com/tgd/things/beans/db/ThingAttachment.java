@@ -24,7 +24,7 @@ public class ThingAttachment {
 	@ManyToOne(optional = false, cascade = CascadeType.ALL)
 	private Thing thing;
 
-	@Column(name = "ATT_CREATED", nullable = false)
+	@Column(name = "ATT_CREATED_DATETIME", nullable = false)
 	private Date created;
 
 	@OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)

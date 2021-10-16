@@ -24,7 +24,7 @@ public class ThingComment {
 	@ManyToOne(optional = false, cascade = CascadeType.ALL)
 	private Thing thing;
 
-	@Column(name = "COM_CREATED", nullable = false)
+	@Column(name = "COM_CREATED_DATETIME", nullable = false)
 	private Date created;
 
 	@OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
