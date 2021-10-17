@@ -1,5 +1,6 @@
 package com.tgd.things.controllers;
 
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.tgd.things.beans.BoxPojo;
+import com.tgd.things.beans.db.Box;
 import com.tgd.things.beans.db.Thing;
 import com.tgd.things.plugins.PhotoServicePlugin;
 import com.tgd.things.service.BoxService;
@@ -47,7 +50,7 @@ public class BoxesController extends BaseController {
 
 	@RequestMapping(value = { "/garage" }, method = RequestMethod.GET)
 	public String getThings(Model model, HttpServletRequest request) {
-		LOGGER.debug("## GET Maincontroller: things");
+		LOGGER.debug("## GET Maincontroller: boxes");
 
 		model.addAttribute("context", WebRequestUtils.getContext());
 		request.getSession().setAttribute("contextpath", request.getContextPath());
@@ -145,7 +148,6 @@ public class BoxesController extends BaseController {
 		// box
 		// model.addAttribute("box", boxService.getById(Long.parseLong(boxId)).get());
 
-		
 		return BOX_PAGE;
 	}
 
@@ -153,55 +155,32 @@ public class BoxesController extends BaseController {
 	 * POST NEW BOX
 	 * 
 	 * 
-	 * 
-	 * @RequestMapping(value = { "/thing/new" }, method = RequestMethod.POST) public
-	 *                       String addNewThing(ThingPojo thingpojo, Model model,
-	 *                       HttpServletRequest request, HttpServletResponse
-	 *                       response) { LOGGER.debug("## POST ThingsController: add
-	 *                       new thing");
-	 * 
-	 *                       model.addAttribute("context",
-	 *                       WebRequestUtils.getContext());
-	 * 
-	 *                       LOGGER.debug("model -> name: {}",
-	 *                       model.getAttribute("name")); LOGGER.debug("req -> name:
-	 *                       {}", request.getAttribute("name"));
-	 * 
-	 *                       LOGGER.debug("thingpojo: {}", thingpojo.toString());
-	 * 
-	 * 
-	 *                       // TODO: summary vacio? // TODO:
-	 * 
-	 *                       ThingPojo addThing = new ThingPojo();
-	 *                       addThing.setBoxId(Long.parseLong(request.getParameter("boxId")));
-	 *                       addThing.setSummary(request.getParameter("summary"));
-	 *                       addThing.setAnalysis(request.getParameter("analysis"));
-	 *                       addThing.setThingTypeId(Long.parseLong(request.getParameter("thingTypeId")));
-	 *                       addThing.setCreated(new Date());
-	 * 
-	 *                       LOGGER.debug("addThing: {}", addThing.toString());
-	 * 
-	 *                       Thing thing = thingService.saveThing(addThing);
-	 *                       LOGGER.trace("thing: {}", thing.toString());
-	 * 
-	 *                       FieldsManager fieldsManager = new
-	 *                       FieldsManager(thingService, customFieldsService); Thing
-	 *                       myThing = fieldsManager.updateFieldValues(request,
-	 *                       thing, null, null);
-	 * 
-	 *                       model.addAttribute("thing", thing);
-	 * 
-	 *                       // box model.addAttribute("box", thing.getBox());
-	 * 
-	 *                       // no es necesario porque se redirige a la lista //
-	 *                       addRelations(model, String.valueOf(thing.getId()));
-	 * 
-	 *                       // Getting Things List
-	 *                       model.addAttribute("searchedThings",
-	 *                       thingService.getFirstTwentyThings());
-	 * 
-	 *                       return "redirect:" + WebRequestUtils.getContext() + "/"
-	 *                       + THINGS_PAGE; }
 	 */
+	@RequestMapping(value = { "/box/new" }, method = RequestMethod.POST)
+	public String addNewBox(BoxPojo boxPojo, Model model, HttpServletRequest request, HttpServletResponse response) {
+		LOGGER.debug("## POST BoxController: add new box");
+
+		model.addAttribute("context", WebRequestUtils.getContext());
+
+		LOGGER.debug("model -> name: {}", model.getAttribute("name"));
+		LOGGER.debug("req -> name: {}", request.getAttribute("name"));
+
+		LOGGER.debug("thingpojo: {}", boxPojo.toString());
+
+		BoxPojo newBox = new BoxPojo();
+		newBox.setName(request.getParameter("boxName"));
+		newBox.setBoxKey(request.getParameter("boxKey"));
+		newBox.setThingTypeSchema((long) 1);
+		newBox.setCreated(new Date());
+
+		LOGGER.debug("newBox: {}", newBox.toString());
+
+		Box box = boxService.saveBox(newBox);
+		LOGGER.trace("BOX added: {}", box.toString());
+
+		model.addAttribute("box", box);
+
+		return "redirect:" + WebRequestUtils.getContext() + "/" + GARAGE_PAGE;
+	}
 
 }

@@ -45,7 +45,7 @@ public class BoxService {
 	public Optional<Box> getByBoxKey(String boxKey) {
 		return boxRepository.findByBoxKey(boxKey);
 	}
-	
+
 	public Iterable<BoxPojo> getAllBoxesWithThingTypes() {
 		Iterable<Box> boxes = boxRepository.findAll();
 
@@ -71,12 +71,14 @@ public class BoxService {
 		Box box = new Box();
 		box.setId(boxPojo.getId());
 		box.setName(boxPojo.getName());
+		box.setBoxKey(boxPojo.getBoxKey());
+		box.setThingTypeSchema(thingTypeSchemaRepository.findById(boxPojo.getThingTypeSchema()).get());
+		// box.setStatusSchema(ThingTypeSchema(thingTypeSchemaRepository.findById(boxPojo.getThingTypeSchema()).get());
 		box.setCreated(boxPojo.getCreated());
 
 		LOGGER.debug("## saveBox: {}", box);
 
 		return boxRepository.save(box);
 	}
-
 
 }

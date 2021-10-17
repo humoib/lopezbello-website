@@ -29,9 +29,6 @@ public class Box {
 	@Column(name = "BOX_CREATED_DATETIME", nullable = false)
 	private Date created;
 
-	@ManyToOne(optional = false)
-	private ThingTypeSchema thingTypeSchema;
-
 	@Column(name = "BOX_LAST_KEY")
 	private Integer lastKey;
 
@@ -44,6 +41,10 @@ public class Box {
 	// 80 - Places
 	@Column(name = "BOX_TYPE", length = 50)
 	private Integer type;
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "BOX_THINGTYPE_SCHEMA")
+	private ThingTypeSchema thingTypeSchema;
 
 	@ManyToOne(optional = true)
 	@JoinColumn(name = "BOX_STATUS_SCHEMA")

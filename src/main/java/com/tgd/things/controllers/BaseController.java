@@ -2,6 +2,8 @@ package com.tgd.things.controllers;
 
 public class BaseController {
 
+	protected static final String GARAGE_PAGE = "garage";
+
 	protected static final String BOXES_PAGE = "boxes";
 
 	protected static final String BOX_PAGE = "box";

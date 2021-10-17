@@ -17,6 +17,8 @@ public class BoxPojo {
 
 	protected String name;
 
+	protected String boxKey;
+
 	protected Date created;
 
 	Long thingTypeSchema;

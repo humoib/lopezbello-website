@@ -84,13 +84,19 @@
 		 					 		
 		 			<div class="form-group">
 					    <label for="boxName">Box Name</label>
-					    <input type="text" class="form-control" id="boxName" aria-describedby="Name your box on a side" placeholder="">
+					    <input type="text" class="form-control" id="boxName" aria-describedby="Name your box on a side" placeholder=""
+					    	name="boxName" value="<#if box?? >
+					    	${box.name!""}
+					    	</#if>">
 					    <small id="emailHelp" class="form-text text-muted">This name is editable</small>
 					</div>
 					
 					<div class="form-group">
 					    <label for="exampleInputPassword1">Box Key</label>
-					    <input type="text" class="form-control wd-25" id="boxKey" placeholder="">
+					    <input type="text" class="form-control wd-25" id="boxKey" placeholder=""
+					    name="boxKey" value="<#if box?? >
+					    	${box.boxKey!""}
+					    	</#if>">
 					</div>
 					
 					<div class="form-group">
