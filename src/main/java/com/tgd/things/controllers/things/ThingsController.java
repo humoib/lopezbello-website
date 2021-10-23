@@ -107,7 +107,7 @@ public class ThingsController extends BaseController {
 		if (request.getParameter("deletedThing") != null) {
 			model.addAttribute("deletedThing", "1");
 		}
-		
+
 		// pages
 		LOGGER.debug("actualPage: {}", page + 1);
 		model.addAttribute("actualPage", page + 1);
@@ -507,7 +507,7 @@ public class ThingsController extends BaseController {
 		editThing.setThingTypeId(thing.getThingType().getId());
 		editThing.setSummary(request.getParameter("summary"));
 		editThing.setAnalysis(request.getParameter("analysis"));
-		editThing.setCreated(thing.getCreated());
+		//editThing.setCreated(thing.getCreated());
 
 		editThing.setDescription(request.getParameter("description"));
 
@@ -616,6 +616,10 @@ public class ThingsController extends BaseController {
 
 		return "redirect:" + WebRequestUtils.getContext() + "/" + THINGS_PAGE + "?deletedThing=" + thing.getSummary();
 	}
+
+	//
+	// COMMENTS
+	//
 
 	// newComment
 	@RequestMapping(value = { "/thing/newComment" }, method = RequestMethod.POST)

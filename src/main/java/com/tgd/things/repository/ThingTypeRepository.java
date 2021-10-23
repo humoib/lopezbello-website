@@ -15,7 +15,7 @@ public interface ThingTypeRepository extends CrudRepository<ThingType, String> {
 	@Query(value = "SELECT tt.* FROM THING_TYPE tt "
 			+ "LEFT JOIN THING_TYPE_SCHEMA_THINGTYPE TTST ON TTST.THINGTYPE_TTY_ID = tt.TTY_ID "
 			+ "LEFT JOIN THING_TYPE_SCHEMA TTS on tts.TTS_ID = TTST.THINGTYPESCHEMA_TTS_ID "
-			+ "LEFT JOIN BOX b on b.THINGTYPESCHEMA_TTS_ID = TTST.THINGTYPESCHEMA_TTS_ID "
+			+ "LEFT JOIN BOX b on b.BOX_THINGTYPE_SCHEMA = TTST.THINGTYPESCHEMA_TTS_ID "
 			+ "WHERE b.BOX_ID = ?1", nativeQuery = true)
 	public List<ThingType> findAllByBoxId(Long boxId);
 

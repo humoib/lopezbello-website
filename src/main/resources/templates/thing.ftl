@@ -27,6 +27,9 @@
 	
 	</script>
 	
+	<!-- date time -->
+	<script src="${context}/js/bootstrap-datetimepicker.min.js"></script>
+	
 	
  	<div class="row">
  	
@@ -184,7 +187,7 @@
 							<!-- <p><b>field.name:</b> value</p> -->
 							
 							<#switch field.type>
-							<#case "text">
+							<#case "text">          <!-- TEXT -->
     							<div class="form-group row">
 							    	<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field.name}</label>
 							    	<div class="col-sm-10">
@@ -198,7 +201,7 @@
 								</div>
 							<#break>
 
-							<#case "text-large">
+							<#case "text-large">							<!-- TEXT LARGE -->
     							<div class="form-group row">
     								<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field.name}</label>
     								<div class="col-sm-10">
@@ -210,6 +213,7 @@
 								</div>
 							<#break>
 
+							<!-- SELECT -->
 							<#case "select">
     							<div class="form-group row">
     								<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field.name}</label>
@@ -229,18 +233,19 @@
 								</div>
 							<#break>
 							
+							<!-- RADIO -->
 							<#case "radio">
     							<div class="form-group row">
     								<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field.name}</label>
     								<div class="col-sm-10">
     									<div class="form-check">
-											<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+											<input class="form-check-input" type="radio" name="cf_${field.id}" id="${field.id}">
 											<label class="form-check-label" for="flexRadioDefault1">
     											Default radio
 											</label>
 										</div>
 										<div class="form-check">
-											<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+											<input class="form-check-input" type="radio" name="cf_${field.id}" id="${field.id}" checked>
 											<label class="form-check-label" for="flexRadioDefault2">
 													Default checked radio
 											</label>
@@ -249,37 +254,30 @@
 								</div>
 							<#break>
 							
+							<!-- DATETIME -->
 							<#case "datetime">
     							<div class="form-group row">
     								<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field.name}</label>
     								<div class="col-sm-10">
-	    									<div class='input-group date' id='datetimepicker5'>
-    										
-               									<input type='text' class="form-control" />
-               									<span class="input-group-addon">
-              									 <span class="glyphicon glyphicon-calendar"></span>
-             									  </span>
-            								</div>
-            								
-            								<script type="text/javascript">
-         $(function () {
-             $('#datetimepicker5').datetimepicker({
-                 defaultDate: "11/1/2013",
-                 disabledDates: [
-                     new Date(2013, 11 - 1, 21),
-                     "11/22/2013 00:53"
-                 ]
-             });
-         });
-      </script>
-      
-         				    		</div>
-									
-								</div>
-								
+	    								<script type="text/javascript">
+								            $(function () {
+								                $('#'+${field.id}).datetimepicker();
+								            });
+								      	</script>
+										<div class='col-sm-6'>
+								            <input type='text' class="form-control" id='${field.id}' name='cf_${field.id}' 
+								            	value='${field.value!""}' />
+								     	</div>
+									</div>						
+								</div>						
 								
 							<#break>
-														
+
+							<!-- USER -->
+							
+							<!-- GROUP -->
+									
+																	
 							</#switch>
 					  	
 					  	</#list>

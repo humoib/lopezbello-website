@@ -28,6 +28,7 @@ public class ThingUtils {
 
 		pojo.setThingTypeId(thingDb.getThingType().getId());
 		pojo.setSummary(thingDb.getSummary());
+		pojo.setAnalysis(thingDb.getAnalysis());
 
 		pojo.setCreated(thingDb.getCreated());
 		pojo.setCreator(thingDb.getCreator());

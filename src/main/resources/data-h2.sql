@@ -42,11 +42,11 @@ INSERT INTO STATUS (STA_ID, STA_CATEGORY, STA_CREATED_DATETIME, STA_NAME)
 INSERT INTO BOX (BOX_ID, BOX_KEY, BOX_NAME, BOX_TYPE, BOX_VIEW, BOX_CREATED_DATETIME, BOX_LAST_KEY, BOX_THINGTYPE_SCHEMA ) 
 	VALUES (1, 'POO', 'My secret things (DEMO)', 1, 'cards', NOW(), 23, 1); 
 INSERT INTO BOX (BOX_ID, BOX_KEY, BOX_NAME, BOX_TYPE, BOX_VIEW, BOX_CREATED_DATETIME, BOX_LAST_KEY, BOX_THINGTYPE_SCHEMA ) 
-	VALUES (2, 'PROJECT', 'Project Management (DEMO)', 3, '3', NOW(), 0, 2); 
+	VALUES (2, 'PROJECT', 'Project Management (DEMO)', 3, 'sprints', NOW(), 0, 2); 
 INSERT INTO BOX (BOX_ID, BOX_KEY, BOX_NAME, BOX_TYPE, BOX_VIEW, BOX_CREATED_DATETIME, BOX_LAST_KEY, BOX_THINGTYPE_SCHEMA ) 
-	VALUES (3, 'SCRUM', 'Developing with agile methodologies (DEMO)', 4, '', NOW(), 2, 2); 
+	VALUES (3, 'SCRUM', 'Developing with agile methodologies (DEMO)', 4, 'kanban', NOW(), 2, 2); 
 INSERT INTO BOX (BOX_ID, BOX_KEY, BOX_NAME, BOX_TYPE, BOX_VIEW, BOX_CREATED_DATETIME, BOX_LAST_KEY, BOX_THINGTYPE_SCHEMA ) 
-	VALUES (4, 'DESK', 'Service Desk Box (DEMO)', 5, '', NOW(), 2, 3); 
+	VALUES (4, 'DESK', 'Service Desk Box (DEMO)', 5, 'queues', NOW(), 2, 3); 
 INSERT INTO BOX (BOX_ID, BOX_KEY, BOX_NAME, BOX_TYPE, BOX_VIEW, BOX_CREATED_DATETIME, BOX_LAST_KEY, BOX_THINGTYPE_SCHEMA ) 
 	VALUES (5, 'PHOTO', 'Photo Box', 6, 'photo', NOW(), 1, 4); 
 
@@ -56,7 +56,7 @@ INSERT INTO CUSTOM_FIELD ( CFI_ID, CFI_NAME, CFI_KEY, CFI_TYPE ) values ( 2, 'Te
 INSERT INTO CUSTOM_FIELD ( CFI_ID, CFI_NAME, CFI_KEY, CFI_TYPE ) values ( 3, 'Select','es.excentia.cf.select', 'select');
 INSERT INTO CUSTOM_FIELD ( CFI_ID, CFI_NAME, CFI_KEY, CFI_TYPE ) values ( 4, 'Radio','es.excentia.cf.radio', 'radio');
 INSERT INTO CUSTOM_FIELD ( CFI_ID, CFI_NAME, CFI_KEY, CFI_TYPE ) values ( 5, 'Date','es.excentia.cf.date', 'date');
-INSERT INTO CUSTOM_FIELD ( CFI_ID, CFI_NAME, CFI_KEY, CFI_TYPE ) values ( 6, 'Date&Time','es.excentia.cf.datetime', 'datetime');
+INSERT INTO CUSTOM_FIELD ( CFI_ID, CFI_NAME, CFI_KEY, CFI_TYPE ) values ( 6, 'Datetime','es.excentia.cf.datetime', 'datetime');
 INSERT INTO CUSTOM_FIELD ( CFI_ID, CFI_NAME, CFI_KEY, CFI_TYPE ) values ( 7, 'Time','es.excentia.cf.time', 'time');
 
 INSERT INTO CUSTOM_FIELD ( CFI_ID, CFI_NAME, CFI_KEY, CFI_TYPE ) values ( 8, 'Description','es.excentia.cf.text-large', 'text-large');
@@ -127,3 +127,5 @@ insert into THING (THI_ID, BOX_BOX_ID, THI_KEY, THI_SUMMARY, THI_CREATED_DATETIM
 insert into THING (THI_ID, BOX_BOX_ID, THI_KEY, THI_SUMMARY, THI_CREATED_DATETIME, THINGTYPE_TTY_ID,THI_CREATOR) values (null, 1, '21', cast (rand() as VARCHAR), TO_DATE('24-DEC-2021 11:42:24', 'DD-MON-YYYY HH24:MI:SS'), 1, 2);
 insert into THING (THI_ID, BOX_BOX_ID, THI_KEY, THI_SUMMARY, THI_CREATED_DATETIME, THINGTYPE_TTY_ID,THI_CREATOR) values (null, 1, '22', cast (rand() as VARCHAR), TO_DATE('24-DEC-2021 11:43:24', 'DD-MON-YYYY HH24:MI:SS'), 1, 2);
 insert into THING (THI_ID, BOX_BOX_ID, THI_KEY, THI_SUMMARY, THI_CREATED_DATETIME, THINGTYPE_TTY_ID,THI_CREATOR) values (null, 1, '23', cast (rand() as VARCHAR), TO_DATE('24-DEC-2021 11:44:24', 'DD-MON-YYYY HH24:MI:SS'), 1, 2);
+
+

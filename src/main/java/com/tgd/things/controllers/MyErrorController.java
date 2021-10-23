@@ -13,8 +13,15 @@ public class MyErrorController implements ErrorController {
 		return "error";
 	}
 
-	@Override
+	//@Override
 	public String getErrorPath() {
-		return "/error";
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+	// @Override
+	// public String getErrorPath() {
+	// return "/error";
+	// }
+
 }
