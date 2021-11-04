@@ -48,7 +48,9 @@ public class MainController {
 	public String index(Model model) {
 		LOGGER.trace("## HOME ");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		// era WebRequestUtils.getContext()
+		LOGGER.debug("context: -{}-", ThingsAppProperties.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 
 		return "home";
 	}

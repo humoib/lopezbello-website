@@ -1,5 +1,6 @@
 package com.tgd.things.beans.db;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -29,12 +30,17 @@ public class ThingType {
 	@ManyToMany(targetEntity = CustomField.class)
 	private Set<CustomField> customField;
 
+	// status ??
+	@OneToMany(targetEntity = ThingType.class)
+	@JoinColumn(name = "TTY_STATUS_SCHEMA")
+	private List<ThingStatusSchema> statusSchema;
+
 	public ThingType() {
 	}
 
 	@Override
 	public String toString() {
-		return "Thing Type{" + "id=" + id + ", name='" + name + '\'' + " '}'";
+		return "Thing Type {" + "id=" + id + ", name='" + name + '\'' + " '}'";
 	}
 
 }

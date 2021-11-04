@@ -6,6 +6,7 @@ import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
@@ -43,10 +44,13 @@ public class ThingsAppApplication extends SpringBootServletInitializer {
 
 	private static ApplicationContext applicationContext;
 
+	//@Value("${spring.profiles.active}")
+	//private String activeProfile;
+
 	public static void main(String[] args) {
 		ConfigurableApplicationContext context = SpringApplication.run(ThingsAppApplication.class, args);
-		
-		//displayAllBeans();
+
+		// displayAllBeans();
 
 		// if (Arrays.asList(env.getActiveProfiles()).contains("dev")) {
 		// LOGGER.debug("HELLO");
@@ -54,6 +58,14 @@ public class ThingsAppApplication extends SpringBootServletInitializer {
 
 		ThingsAppProperties bean = context.getBean(ThingsAppProperties.class);
 		bean.printVariable();
+
+		initialData();
+
+	}
+
+	@Profile("dev")
+	public static void initialData() {
+		LOGGER.debug("-------------------------------- DEV - Initial Data");
 
 	}
 

@@ -26,8 +26,9 @@ public class ThingStatusSchema {
 	@Column(name = "TSS_DESCRIPTION", length = 200)
 	private String description;
 
-	@OneToMany(targetEntity = ThingType.class)
-	private Set<ThingType> thingType;
+//	@OneToMany(targetEntity = ThingType.class)
+//	@JoinColumn(name = "TSS_DESCRIPTION", length = 200)
+//	private Set<ThingType> thingType;
 
 	public ThingStatusSchema() {
 	}

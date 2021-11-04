@@ -27,11 +27,14 @@ public class ProgressValve extends ValveBase {
 
 	private void removeMyself() {
 		LOGGER.debug("Application started, de-registering");
-		LOGGER.debug("getConainer(): " + getContainer());
+		LOGGER.debug("getContainer(): " + getContainer());
 
-		// TODO getResponse devuelve null en APACHE TOMCAT
-		getContainer().getPipeline().removeValve(this);
+		// TODO getConainer devuelve null en APACHE TOMCAT
+		if (getContainer() != null) {
+			getContainer().getPipeline().removeValve(this);
+		} else {
 
+		}
 	}
 
 	@Override

@@ -26,11 +26,11 @@
         <div class="container">
         	<div class="d-flex flex-row-reverse">
         		<#if Session.SPRING_SECURITY_CONTEXT?? >
-				<a href="/main" class="btn btn-primary">Logged in as ${Session.SPRING_SECURITY_CONTEXT.authentication.name} - Go to th1ngs!</a>&nbsp;&nbsp;
+				<a href="${context!""}/main" class="btn btn-primary">Logged in as ${Session.SPRING_SECURITY_CONTEXT.authentication.name} - Go to th1ngs!</a>&nbsp;&nbsp;
 				<#else>        		
-				<a href="/login" class="btn btn-primary">Login</a>&nbsp;&nbsp;&nbsp;
+				<a href="${context!""}/login" class="btn btn-primary">Login</a>&nbsp;&nbsp;&nbsp;
 				</#if>
-				<a href="/signup" class="btn btn-success">Sign up here!</a>
+				<a href="${context!""}/signup" class="btn btn-success">Sign up here!</a>
 			</div>		
         	
           	<h1 class="display-3"><@spring.message code="home.welcome"/> th1ngs!</h1>

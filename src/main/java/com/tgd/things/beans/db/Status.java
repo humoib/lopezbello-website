@@ -20,9 +20,6 @@ public class Status {
 	@Column(name = "STA_ID", length = 20, nullable = false)
 	private Long id;
 
-	//@ManyToMany(cascade = CascadeType.ALL)
-	//private List<Thing> thing;
-
 	@Column(name = "STA_NAME", nullable = false)
 	private String name;
 

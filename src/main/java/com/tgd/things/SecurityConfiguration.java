@@ -1,5 +1,11 @@
 package com.tgd.things;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -9,8 +15,14 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.DefaultRedirectStrategy;
+import org.springframework.security.web.RedirectStrategy;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
+import com.tgd.things.config.ThingsAppProperties;
 
 @Configuration
 @EnableWebSecurity
@@ -37,13 +49,28 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		// https://dzone.com/articles/add-login-to-your-spring-boot-app-in-10-mins
 
+		RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+
+		// the boolean flags force the redirection even though
+		// the user requested a specific secured resource.
+		//http.formLogin().defaultSuccessUrl(ThingsAppProperties.getContext() + "/index", true);
+
 		http.httpBasic().and().authorizeRequests()
 				.antMatchers("/", "/home", "/signup", "/resources/**", "/admin/h2-console/**", "/monitoring/**",
-						"/css/**","/js/**")
+						"/css/**", "/js/**")
 				.permitAll().anyRequest().authenticated().and().formLogin()
 				// .loginPage("/login.html")
 				.loginProcessingUrl("/login").defaultSuccessUrl("/index", true)
 				// .loginPage("/login")
+				// .successHandler(new AuthenticationSuccessHandler() {
+				// @Override
+				// public void onAuthenticationSuccess(HttpServletRequest request,
+				// HttpServletResponse response,
+				// Authentication authentication) throws IOException, ServletException {
+				// redirectStrategy.sendRedirect(request, response,
+				// ThingsAppProperties.getContext() + "/");
+				// }
+				// })
 				.permitAll().and().logout().permitAll(); // .and().antMatcher("/admin/h2-console/**");
 
 		http.csrf().disable();

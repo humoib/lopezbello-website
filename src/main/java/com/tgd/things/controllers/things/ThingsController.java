@@ -37,16 +37,20 @@ import com.tgd.things.beans.CustomFieldReduced;
 import com.tgd.things.beans.CustomFieldValueReduced;
 import com.tgd.things.beans.NewCommentPojo;
 import com.tgd.things.beans.ThingPojo;
+import com.tgd.things.beans.db.Status;
 import com.tgd.things.beans.db.Thing;
 import com.tgd.things.beans.db.ThingAttachment;
 import com.tgd.things.beans.db.ThingComment;
 import com.tgd.things.config.ThingsAppConstants;
+import com.tgd.things.config.ThingsAppProperties;
 import com.tgd.things.controllers.BaseController;
 import com.tgd.things.managers.FieldsManager;
+import com.tgd.things.managers.ThingsStatusManager;
 import com.tgd.things.service.BoxService;
 import com.tgd.things.service.CustomFieldsService;
 import com.tgd.things.service.ThingCommentService;
 import com.tgd.things.service.ThingService;
+import com.tgd.things.service.ThingStatusService;
 import com.tgd.things.system.ThingsSystem;
 import com.tgd.things.utils.ThingUtils;
 import com.tgd.things.utils.ThingsProperties;
@@ -256,9 +260,9 @@ public class ThingsController extends BaseController {
 
 		// Fields
 		// TODO: ponemos TAREA
-		List<CustomFieldReduced> fields = customFieldsService
-				.getAllFieldsFromThingType(thingService.findThingTypeById(new Long(1)));
-		model.addAttribute("fields", fields);
+		// List<CustomFieldReduced> fields = customFieldsService
+		// .getAllFieldsFromThingType(thingService.findThingTypeById(new Long(1)));
+		// model.addAttribute("fields", fields);
 
 		return "newthingselectbox";
 	}
@@ -361,7 +365,8 @@ public class ThingsController extends BaseController {
 		// Getting Things List
 		model.addAttribute("searchedThings", thingService.getFirstTwentyThings());
 
-		return "redirect:" + WebRequestUtils.getContext() + "/" + THINGS_PAGE;
+		// + ThingsAppProperties.getContext()
+		return "redirect:" + "/" + THINGS_PAGE;
 	}
 
 	@RequestMapping(value = { "/thing/edit/{id}" }, method = RequestMethod.GET)
@@ -403,6 +408,222 @@ public class ThingsController extends BaseController {
 		model.addAttribute("operation", "edit");
 
 		return THING_PAGE;
+	}
+
+	/**
+	 * 
+	 * @param thingform
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = { "/thing/edit/{id}" }, method = RequestMethod.POST)
+	public String editThing(ThingPojo thingform, Model model, HttpServletRequest request, HttpServletResponse response,
+			@PathVariable String id) {
+		LOGGER.debug("## POST ThingsController: update thing");
+
+		model.addAttribute("context", WebRequestUtils.getContext());
+
+		LOGGER.debug("thingform: {}", thingform.toString());
+
+		Locale currentLocale = LocaleContextHolder.getLocale();
+		LOGGER.info("Locale: {}", currentLocale);
+
+		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(currentLocale);
+		otherSymbols.setDecimalSeparator(',');
+		DecimalFormat numberFormat = (DecimalFormat) DecimalFormat.getInstance(LocaleContextHolder.getLocale());
+		numberFormat.setDecimalFormatSymbols(otherSymbols);
+
+		// Get thing from DB
+		Thing thing = thingService.getThing(Long.parseLong(id)).get();
+
+		// Creates the POJO object
+		ThingPojo editThing = new ThingPojo();
+		editThing.setId(thing.getId());
+		editThing.setKey(thing.getKey());
+		editThing.setBoxId(thing.getBox().getId().longValue());
+		editThing.setThingTypeId(thing.getThingType().getId());
+		editThing.setSummary(request.getParameter("summary"));
+		editThing.setAnalysis(request.getParameter("analysis"));
+
+		editThing.setDescription(request.getParameter("description"));
+
+		// status
+		Status statusTmp = ThingsStatusManager.getStatus(editThing);
+		if (statusTmp != null) {
+			editThing.setStatus(statusTmp.getId());
+		}
+
+		Thing thingSaved = thingService.saveThing(editThing);
+		LOGGER.trace("thing: {}", thingSaved.toString());
+
+		model.addAttribute("thing", thingSaved);
+		model.addAttribute("thingId", thingSaved.getId());
+
+		// box
+		model.addAttribute("box", thingSaved.getBox());
+
+		// relations
+		// LOGGER.trace("thingService.getThing(Long.parseLong(id)).get()): " +
+		// thingSaved);
+		// model.addAttribute("thingsRelated",
+		// thingService.getAllRelatedThings(thingSaved));
+
+		addRelations(model, id);
+
+		// update field values
+		FieldsManager fieldsManager = new FieldsManager(thingService, customFieldsService);
+		Thing myThing = fieldsManager.updateFieldValues(request, thing, null, id);
+		LOGGER.info("saveThing: {} {}", editThing.getId(), editThing.getSummary());
+
+		// CUSTOM FIELDS
+		// TODO : suponemos que todos los camps están en la pantalla
+		/*
+		 * List<CustomFieldReduced> fields = customFieldsService
+		 * .getAllFieldsFromThingType(thingService.findById(new Long(1))); for
+		 * (CustomFieldReduced field : fields) {
+		 * LOGGER.debug("FIELD ---> id: {} name: {} type: {}", field.getKey(),
+		 * field.getName(), field.getType()); String temp = request.getParameter("cf_" +
+		 * field.getId()); LOGGER.debug("REQUEST PARAM {} value {}", "cf_" +
+		 * field.getId(), request.getParameter("cf_" + field.getId())); if (temp != "")
+		 * { int ret = customFieldsService.updateValue(editThing, field.getName(),
+		 * temp); LOGGER.debug("updated " + temp + " - ret:" + ret); } }
+		 */
+
+		model.addAttribute(THING_PAGE, thing);
+
+		/*
+		 * List<Content> contentList = thingService.getAllContents(Long.parseLong(id));
+		 * LOGGER.debug("contents - size: {} - List: {}", contentList.size(),
+		 * contentList); model.addAttribute("contentList", contentList);
+		 */
+		// model.addAttribute("labelsUtils", new LabelsUtils());
+
+		// LOGGER.debug("Getting first 20 Things");
+		// model.addAttribute("searchedThings", thingService.getFirstTwentyThings());
+
+		// Fields
+		// TODO: ponemos TAREA
+		List<CustomFieldValueReduced> fields = customFieldsService.getAllFieldValuesFromThing(thingSaved);
+		model.addAttribute("fields", fields);
+
+		LOGGER.debug("WebRequestUtils.getContext(): " + WebRequestUtils.getContext());
+		LOGGER.debug("---> " + "redirect:" + "/" + THINGS_PAGE);
+
+		return "redirect:" + "/" + THINGS_PAGE;
+	}
+
+	/**
+	 * 
+	 * @param thingform
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = { "/thing/delete/{id}" }, method = RequestMethod.GET)
+	public String deleteThing(ThingPojo thingform, Model model, HttpServletRequest request,
+			HttpServletResponse response, @PathVariable String id) {
+		LOGGER.debug("## GET ThingsController: Delete thing");
+
+		model.addAttribute("context", WebRequestUtils.getContext());
+
+		LOGGER.debug("thingform: {}", thingform.toString());
+
+		Locale currentLocale = LocaleContextHolder.getLocale();
+		LOGGER.info("Locale: {}", currentLocale);
+
+		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(currentLocale);
+		otherSymbols.setDecimalSeparator(',');
+		DecimalFormat numberFormat = (DecimalFormat) DecimalFormat.getInstance(LocaleContextHolder.getLocale());
+		numberFormat.setDecimalFormatSymbols(otherSymbols);
+
+		// Get thing from DB
+		Thing thing = thingService.getThing(Long.parseLong(id)).get();
+
+		thingService.dropRelatedThings(thing);
+
+		// delete fields
+		// TODO
+
+		// delete attachements
+// TODO
+
+		// Finally, delete the thing
+		thingService.deleteThing(thing);
+
+		// update field values
+		// FieldsManager fieldsManager = new FieldsManager(thingService,
+		// customFieldsService);
+		// Thing myThing = fieldsManager.updateFieldValues(request, thing, null, id);
+
+		return "redirect:" + "/" + THINGS_PAGE + "?deletedThing=" + thing.getSummary();
+	}
+
+	//
+	// COMMENTS
+	//
+
+	// newComment
+	@RequestMapping(value = { "/thing/newComment" }, method = RequestMethod.POST)
+	public String addNewComment(ThingPojo thingpojo, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+		LOGGER.debug("## POST ThingsController: add new comment");
+
+		model.addAttribute("context", WebRequestUtils.getContext());
+
+		LOGGER.debug("model -> name: {}", model.getAttribute("name"));
+		LOGGER.debug("req -> name: {}", request.getAttribute("name"));
+
+		// LOGGER.debug("thingpojo: {}", thingpojo.toString());
+
+		// Locale currentLocale = LocaleContextHolder.getLocale();
+		// LOGGER.info("Locale: {}", currentLocale);
+		/*
+		 * DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(currentLocale);
+		 * otherSymbols.setDecimalSeparator(','); DecimalFormat numberFormat =
+		 * (DecimalFormat) DecimalFormat.getInstance(LocaleContextHolder.getLocale());
+		 * numberFormat.setDecimalFormatSymbols(otherSymbols);
+		 */
+
+		Long thingId = Long.parseLong(request.getParameter("thingId"));
+		Optional<Thing> myThing = thingService.getThing(thingId);
+
+		/*
+		 * addThing.setSummary(request.getParameter("summary"));
+		 * addThing.setThingTypeId(Long.parseLong(request.getParameter(
+		 * "thingTypeId"))); addThing.setCreated(new Date());
+		 */
+		LOGGER.debug("myThing: {}", myThing.get().toString());
+
+		LOGGER.debug("new comment: {}", request.getParameter("comment"));
+
+		NewCommentPojo newComment = new NewCommentPojo();
+		newComment.setThingId(thingId);
+		newComment.setComment(request.getParameter("comment"));
+		thingCommentService.saveComment(newComment);
+
+		/*
+		 * 
+		 * Thing thing = thingService.saveThing(addThing); LOGGER.trace("thing: {}",
+		 * thing.toString());
+		 * 
+		 * FieldsManager fieldsManager = new FieldsManager(thingService,
+		 * customFieldsService); Thing myThing =
+		 * fieldsManager.updateFieldValues(request, thing, null, null);
+		 */
+
+		model.addAttribute("thingId", myThing.get().getId());
+		model.addAttribute("thingComments", (List<ThingComment>) thingCommentService.getComments(myThing.get()));
+		model.addAttribute(THING_PAGE, myThing.get());
+
+		// Getting Things List
+		model.addAttribute("searchedThings", thingService.getFirstTwentyThings());
+
+		return "redirect:" + "/" + THING_PAGE + "/" + myThing.get().getId();
 	}
 
 	@RequestMapping(value = { "/thing/attach/{id}" }, method = RequestMethod.GET)
@@ -467,216 +688,6 @@ public class ThingsController extends BaseController {
 			e.printStackTrace();
 		}
 
-		return "redirect:" + WebRequestUtils.getContext() + "/" + THING_PAGE + "/" + request.getParameter("thingId");
-	}
-
-	/**
-	 * 
-	 * @param thingform
-	 * @param model
-	 * @param request
-	 * @param response
-	 * @param id
-	 * @return
-	 */
-	@RequestMapping(value = { "/thing/edit/{id}" }, method = RequestMethod.POST)
-	public String editThing(ThingPojo thingform, Model model, HttpServletRequest request, HttpServletResponse response,
-			@PathVariable String id) {
-		LOGGER.debug("## POST ThingsController: update thing");
-
-		model.addAttribute("context", WebRequestUtils.getContext());
-
-		LOGGER.debug("thingform: {}", thingform.toString());
-
-		Locale currentLocale = LocaleContextHolder.getLocale();
-		LOGGER.info("Locale: {}", currentLocale);
-
-		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(currentLocale);
-		otherSymbols.setDecimalSeparator(',');
-		DecimalFormat numberFormat = (DecimalFormat) DecimalFormat.getInstance(LocaleContextHolder.getLocale());
-		numberFormat.setDecimalFormatSymbols(otherSymbols);
-
-		// Get thing from DB
-		Thing thing = thingService.getThing(Long.parseLong(id)).get();
-
-		// Creates the POJO object
-		ThingPojo editThing = new ThingPojo();
-		editThing.setId(thing.getId());
-		editThing.setKey(thing.getKey());
-		editThing.setBoxId(thing.getBox().getId().longValue());
-		editThing.setThingTypeId(thing.getThingType().getId());
-		editThing.setSummary(request.getParameter("summary"));
-		editThing.setAnalysis(request.getParameter("analysis"));
-		//editThing.setCreated(thing.getCreated());
-
-		editThing.setDescription(request.getParameter("description"));
-
-		Thing thingSaved = thingService.saveThing(editThing);
-		LOGGER.trace("thing: {}", thingSaved.toString());
-		model.addAttribute("thing", thingSaved);
-		model.addAttribute("thingId", thingSaved.getId());
-
-		// box
-		model.addAttribute("box", thingSaved.getBox());
-
-		// relations
-		// LOGGER.trace("thingService.getThing(Long.parseLong(id)).get()): " +
-		// thingSaved);
-		// model.addAttribute("thingsRelated",
-		// thingService.getAllRelatedThings(thingSaved));
-
-		addRelations(model, id);
-
-		// update field values
-		FieldsManager fieldsManager = new FieldsManager(thingService, customFieldsService);
-		Thing myThing = fieldsManager.updateFieldValues(request, thing, null, id);
-		LOGGER.info("saveThing: {} {}", editThing.getId(), editThing.getSummary());
-
-		// CUSTOM FIELDS
-		// TODO : suponemos que todos los camps están en la pantalla
-		/*
-		 * List<CustomFieldReduced> fields = customFieldsService
-		 * .getAllFieldsFromThingType(thingService.findById(new Long(1))); for
-		 * (CustomFieldReduced field : fields) {
-		 * LOGGER.debug("FIELD ---> id: {} name: {} type: {}", field.getKey(),
-		 * field.getName(), field.getType()); String temp = request.getParameter("cf_" +
-		 * field.getId()); LOGGER.debug("REQUEST PARAM {} value {}", "cf_" +
-		 * field.getId(), request.getParameter("cf_" + field.getId())); if (temp != "")
-		 * { int ret = customFieldsService.updateValue(editThing, field.getName(),
-		 * temp); LOGGER.debug("updated " + temp + " - ret:" + ret); } }
-		 */
-
-		model.addAttribute(THING_PAGE, thing);
-
-		/*
-		 * List<Content> contentList = thingService.getAllContents(Long.parseLong(id));
-		 * LOGGER.debug("contents - size: {} - List: {}", contentList.size(),
-		 * contentList); model.addAttribute("contentList", contentList);
-		 */
-		// model.addAttribute("labelsUtils", new LabelsUtils());
-
-		// LOGGER.debug("Getting first 20 Things");
-		// model.addAttribute("searchedThings", thingService.getFirstTwentyThings());
-
-		// Fields
-		// TODO: ponemos TAREA
-		List<CustomFieldValueReduced> fields = customFieldsService.getAllFieldValuesFromThing(thingSaved);
-		model.addAttribute("fields", fields);
-
-		LOGGER.debug("WebRequestUtils.getContext(): " + WebRequestUtils.getContext());
-		LOGGER.debug("---> " + "redirect:" + WebRequestUtils.getContext() + "/" + THINGS_PAGE);
-
-		return "redirect:" + WebRequestUtils.getContext() + "/" + THINGS_PAGE;
-	}
-
-	/**
-	 * 
-	 * @param thingform
-	 * @param model
-	 * @param request
-	 * @param response
-	 * @param id
-	 * @return
-	 */
-	@RequestMapping(value = { "/thing/delete/{id}" }, method = RequestMethod.GET)
-	public String deleteThing(ThingPojo thingform, Model model, HttpServletRequest request,
-			HttpServletResponse response, @PathVariable String id) {
-		LOGGER.debug("## GET ThingsController: Delete thing");
-
-		model.addAttribute("context", WebRequestUtils.getContext());
-
-		LOGGER.debug("thingform: {}", thingform.toString());
-
-		Locale currentLocale = LocaleContextHolder.getLocale();
-		LOGGER.info("Locale: {}", currentLocale);
-
-		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(currentLocale);
-		otherSymbols.setDecimalSeparator(',');
-		DecimalFormat numberFormat = (DecimalFormat) DecimalFormat.getInstance(LocaleContextHolder.getLocale());
-		numberFormat.setDecimalFormatSymbols(otherSymbols);
-
-		// Get thing from DB
-		Thing thing = thingService.getThing(Long.parseLong(id)).get();
-
-		thingService.dropRelatedThings(thing);
-
-		// delete fields
-		// TODO
-
-		// delete attachements
-// TODO
-
-		// Finally, delete the thing
-		thingService.deleteThing(thing);
-
-		// update field values
-		// FieldsManager fieldsManager = new FieldsManager(thingService,
-		// customFieldsService);
-		// Thing myThing = fieldsManager.updateFieldValues(request, thing, null, id);
-
-		return "redirect:" + WebRequestUtils.getContext() + "/" + THINGS_PAGE + "?deletedThing=" + thing.getSummary();
-	}
-
-	//
-	// COMMENTS
-	//
-
-	// newComment
-	@RequestMapping(value = { "/thing/newComment" }, method = RequestMethod.POST)
-	public String addNewComment(ThingPojo thingpojo, Model model, HttpServletRequest request,
-			HttpServletResponse response) {
-		LOGGER.debug("## POST ThingsController: add new comment");
-
-		model.addAttribute("context", WebRequestUtils.getContext());
-
-		LOGGER.debug("model -> name: {}", model.getAttribute("name"));
-		LOGGER.debug("req -> name: {}", request.getAttribute("name"));
-
-		// LOGGER.debug("thingpojo: {}", thingpojo.toString());
-
-		// Locale currentLocale = LocaleContextHolder.getLocale();
-		// LOGGER.info("Locale: {}", currentLocale);
-		/*
-		 * DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(currentLocale);
-		 * otherSymbols.setDecimalSeparator(','); DecimalFormat numberFormat =
-		 * (DecimalFormat) DecimalFormat.getInstance(LocaleContextHolder.getLocale());
-		 * numberFormat.setDecimalFormatSymbols(otherSymbols);
-		 */
-
-		Long thingId = Long.parseLong(request.getParameter("thingId"));
-		Optional<Thing> myThing = thingService.getThing(thingId);
-
-		/*
-		 * addThing.setSummary(request.getParameter("summary"));
-		 * addThing.setThingTypeId(Long.parseLong(request.getParameter(
-		 * "thingTypeId"))); addThing.setCreated(new Date());
-		 */
-		LOGGER.debug("myThing: {}", myThing.get().toString());
-
-		LOGGER.debug("new comment: {}", request.getParameter("comment"));
-
-		NewCommentPojo newComment = new NewCommentPojo();
-		newComment.setThingId(thingId);
-		newComment.setComment(request.getParameter("comment"));
-		thingCommentService.saveComment(newComment);
-
-		/*
-		 * 
-		 * Thing thing = thingService.saveThing(addThing); LOGGER.trace("thing: {}",
-		 * thing.toString());
-		 * 
-		 * FieldsManager fieldsManager = new FieldsManager(thingService,
-		 * customFieldsService); Thing myThing =
-		 * fieldsManager.updateFieldValues(request, thing, null, null);
-		 */
-
-		model.addAttribute("thingId", myThing.get().getId());
-		model.addAttribute("thingComments", (List<ThingComment>) thingCommentService.getComments(myThing.get()));
-		model.addAttribute(THING_PAGE, myThing.get());
-
-		// Getting Things List
-		model.addAttribute("searchedThings", thingService.getFirstTwentyThings());
-
-		return "redirect:" + WebRequestUtils.getContext() + "/" + THING_PAGE + "/" + myThing.get().getId();
+		return "redirect:" + "/" + THING_PAGE + "/" + request.getParameter("thingId");
 	}
 }

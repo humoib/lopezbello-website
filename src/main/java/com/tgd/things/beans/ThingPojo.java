@@ -17,7 +17,6 @@ public class ThingPojo {
 
 	protected String thingKey;
 
-
 	protected Long thingTypeId;
 
 	protected String thingTypeName;
@@ -35,6 +34,8 @@ public class ThingPojo {
 
 	protected String analysis;
 
+	protected Long status;
+	
 	protected String description;
 
 	protected Date created;

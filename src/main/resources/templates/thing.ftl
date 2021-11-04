@@ -71,8 +71,9 @@
 				</div>
 					
 				<div class="btn-group btn-group-sm" role="group">
-				    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				      Transit
+				    <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" 
+				    	data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				      ${thing.status!"ERROR: NO STATUS"}
 				    </button>
 				    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
 				      <a class="dropdown-item" href="#">Dropdown link</a>
@@ -105,10 +106,11 @@
   						
   						<div class="card">
   							<div class="card-header"><b>Attachments</b>
-  								<button type="button" class="btn-small btn-primary float-sm-right" data-toggle="modal" data-target="#relations-modal"
-		    						title="Number: ${thingsRelated?size}">
+  								<button type="button" class="btn-small btn-primary float-sm-right" 
+		    						onclick="window.location.href='${context}/thing/attach/${thing.id}';">
 		  							Attach
 								</button>
+								
   							</div>
   							<div class="card-body">
 								<#if attachments??>
