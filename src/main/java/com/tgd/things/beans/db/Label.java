@@ -21,7 +21,7 @@ import lombok.Setter;
 public class Label {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
 	@Column(nullable = false)

@@ -16,8 +16,8 @@ import lombok.Setter;
 public class ThingStatusSchema {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "TSS_ID", length = 20, nullable = false)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "TSS_ID", length = 20)
 	private Long id;
 
 	@Column(name = "TSS_NAME", length = 50, nullable = false)

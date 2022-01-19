@@ -43,8 +43,7 @@ public class MainController {
 	@Autowired
 	ThingService thingService;
 
-// "/",
-	@RequestMapping(value = { "", "/home" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
 	public String index(Model model) {
 		LOGGER.trace("## HOME ");
 

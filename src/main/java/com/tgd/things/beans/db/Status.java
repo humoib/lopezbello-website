@@ -16,8 +16,8 @@ import lombok.Setter;
 public class Status {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "STA_ID", length = 20, nullable = false)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "STA_ID", length = 20)
 	private Long id;
 
 	@Column(name = "STA_NAME", nullable = false)

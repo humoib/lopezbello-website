@@ -17,8 +17,8 @@ import lombok.Setter;
 public class ThingComment {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "COM_ID", length = 20, nullable = false)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Column(name = "COM_ID", length = 20)
 	private Long id;
 
 	@ManyToOne(optional = false, cascade = CascadeType.ALL)

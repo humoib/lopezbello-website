@@ -14,8 +14,8 @@ import lombok.Setter;
 public class CustomFieldValue {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "CFV_ID", length = 20, nullable = false)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ")
+	//@SequenceGenerator(name = "SEQ", sequenceName = "KEY_GEN_SEQ", initialValue = 1, allocationSize = 500)
 	private Long id;
 
 	@OneToOne

@@ -4,10 +4,10 @@ public interface CustomFieldReduced {
 
 	String getId();
 
-	String getKey();
+	String get_key();
 
-	String getName();
+	String get_name();
 
-	String getType();
+	String get_type();
 
 }

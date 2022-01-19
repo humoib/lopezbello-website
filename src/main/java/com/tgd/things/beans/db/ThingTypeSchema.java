@@ -26,7 +26,7 @@ public class ThingTypeSchema {
 	@Column(name = "TTS_DESCRIPTION", length = 200)
 	private String description;
 
-	@OneToMany(targetEntity = ThingType.class)
+	@ManyToMany(targetEntity = ThingType.class)
 	private Set<ThingType> thingType;
 
 	public ThingTypeSchema() {

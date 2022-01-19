@@ -16,8 +16,8 @@ import lombok.Setter;
 public class Box {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "BOX_ID", length = 20, nullable = false)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "BOX_ID", length = 20)
 	private Long id;
 
 	@Column(name = "BOX_KEY", length = 10, nullable = false)

@@ -14,8 +14,8 @@ import lombok.Setter;
 public class WorkflowTransition {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "TRA_ID", length = 20, nullable = false)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "TRA_ID", length = 20)
 	private Long id;
 
 	@Column(name = "TRA_NAME", length = 500, nullable = false)

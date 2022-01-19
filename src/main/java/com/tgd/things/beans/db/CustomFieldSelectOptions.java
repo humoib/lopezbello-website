@@ -14,8 +14,8 @@ import lombok.Setter;
 public class CustomFieldSelectOptions {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "CFO_ID", length = 20, nullable = false)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "CFO_ID", length = 20)
 	private Long id;
 
 	@ManyToOne

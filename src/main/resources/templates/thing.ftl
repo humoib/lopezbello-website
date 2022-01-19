@@ -9,14 +9,15 @@
 		$.ajax({
    			type: "PUT",
 		    contentType: "application/json; charset=utf-8",
-    		url: "${baseUrl!""}${context}/rest/api/1/thing/relate",
+    		url: "${baseUrl!"http://localhost:8080"}${context}/rest/api/1/thing/relate",
     		data: '{"source": "'+$("#thingId").val()+'", "target":"'+$("#relate option:selected").val()+'"}',
-    		dataType: "text",
+    		dataType: "jsonp",
     		success: function (returnData) {
         		console.debug('SUCCESS - related');
     		},
     		error: function (xhr, textStatus, errorThrown) { 
-    			console.error("ERROR: "+ xhr.status + ': ' + xhr.statusText +' '+ textStatus +' '+ errorThrown);
+    			console.log('data: {"source": "'+$("#thingId").val()+'", "target":"'+$("#relate option:selected").val()+'"}');
+    			console.error("ERROR: "+ xhr.responseText +" - "+ xhr.status + ': ' + xhr.statusText +' '+ textStatus +' '+ errorThrown);
     		}
 		});
 	}
@@ -188,15 +189,15 @@
 			 			<#list fields as field >
 							<!-- <p><b>field.name:</b> value</p> -->
 							
-							<#switch field.type>
+							<#switch field._type>
 							<#case "text">          <!-- TEXT -->
     							<div class="form-group row">
-							    	<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field.name}</label>
+							    	<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field._name}</label>
 							    	<div class="col-sm-10">
 							      		<input type="text" class="form-control form-control-sm" id="${field.id}" 
 							      			name="cf_${field.id}" placeholder="text" 
-							      			<#if field.value?? >
-							      			value="${field.value}"
+							      			<#if field._value?? >
+							      			value="${field._value}"
 						    	  			</#if>
 						      				>
 						    		</div>
@@ -205,11 +206,11 @@
 
 							<#case "text-large">							<!-- TEXT LARGE -->
     							<div class="form-group row">
-    								<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field.name}</label>
+    								<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field._name}</label>
     								<div class="col-sm-10">
 	    									<textarea class="form-control form-control-sm" 
 	    										id="${field.id}" name="cf_${field.id}" 
-	    										rows="3"><#if field.value?? >${field.value}</#if></textarea>
+	    										rows="3"><#if field._value?? >${field.value}</#if></textarea>
          				    		</div>
 									
 								</div>
@@ -218,14 +219,14 @@
 							<!-- SELECT -->
 							<#case "select">
     							<div class="form-group row">
-    								<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field.name}</label>
+    								<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field._name}</label>
     								<div class="col-sm-10">
     									<select id="${field.id}" name="cf_${field.id}">
     										<option value="">### none ###
     										    										
     										<#list options['3'] as option >
  												<option value="${option}"
- 												<#if field.value?? && option==field.value> selected</#if>
+ 												<#if field._value?? && option==field._value> selected</#if>
  												>${option}
 											</#list>	
     									
@@ -238,7 +239,7 @@
 							<!-- RADIO -->
 							<#case "radio">
     							<div class="form-group row">
-    								<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field.name}</label>
+    								<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field._name}</label>
     								<div class="col-sm-10">
     									<div class="form-check">
 											<input class="form-check-input" type="radio" name="cf_${field.id}" id="${field.id}">
@@ -259,7 +260,7 @@
 							<!-- DATETIME -->
 							<#case "datetime">
     							<div class="form-group row">
-    								<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field.name}</label>
+    								<label for="cf_${field.id}" class="col-sm-2 col-form-label">${field._name}</label>
     								<div class="col-sm-10">
 	    								<script type="text/javascript">
 								            $(function () {
@@ -268,7 +269,7 @@
 								      	</script>
 										<div class='col-sm-6'>
 								            <input type='text' class="form-control" id='${field.id}' name='cf_${field.id}' 
-								            	value='${field.value!""}' />
+								            	value='${field._value!""}' />
 								     	</div>
 									</div>						
 								</div>						

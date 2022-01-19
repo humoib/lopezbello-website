@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.tgd.things.beans.db.security.User;
+import com.tgd.things.config.ThingsAppProperties;
 import com.tgd.things.service.BoxService;
 import com.tgd.things.service.CustomFieldsService;
 import com.tgd.things.service.LabelService;
@@ -45,7 +46,7 @@ public class AdminController {
 	public String adminIndex(Model model, HttpServletRequest request) {
 		LOGGER.trace("## ADMIN INDEX ");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 
 		return "admin/index";
 	}
@@ -54,7 +55,7 @@ public class AdminController {
 	public String adminUsers(Model model, HttpServletRequest request) {
 		LOGGER.trace("## ADMIN USERS");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 
 		model.addAttribute("users", userService.getAllUsers());
 
@@ -65,7 +66,7 @@ public class AdminController {
 	public String adminGroups(Model model, HttpServletRequest request) {
 		LOGGER.trace("## ADMIN GROUPS");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 
 		model.addAttribute("boxes", boxService.getAllBoxes());
 
@@ -76,7 +77,7 @@ public class AdminController {
 	public String adminPlaces(Model model, HttpServletRequest request) {
 		LOGGER.trace("## ADMIN BOXES");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 
 		model.addAttribute("boxes", boxService.getAllBoxes());
 
@@ -87,7 +88,7 @@ public class AdminController {
 	public String adminThingTypes(Model model, HttpServletRequest request) {
 		LOGGER.trace("## ADMIN THING-TYPES");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 		model.addAttribute("adminpage", "Thing Types");
 
 		model.addAttribute("thingtypes", thingService.getAllThingTypes());
@@ -99,7 +100,7 @@ public class AdminController {
 	public String adminCustomFields(Model model, HttpServletRequest request) {
 		LOGGER.trace("## ADMIN CUSTOM-FIELD");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 
 		model.addAttribute("customfields", customFieldsService.getAllFields());
 
@@ -114,7 +115,7 @@ public class AdminController {
 	public String adminLabels(Model model, HttpServletRequest request) {
 		LOGGER.trace("## ADMIN LABELS ");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 
 		model.addAttribute("labels", labelService.getLabels());
 
@@ -125,7 +126,7 @@ public class AdminController {
 	public String systemInfo(Model model, HttpServletRequest request) {
 		LOGGER.trace("## SYSTEM INFO");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 
 		return "admin/systemInfo";
 	}
@@ -138,7 +139,7 @@ public class AdminController {
 	public String addUser(Model model, HttpServletRequest request) {
 		LOGGER.trace("## ADMIN USER");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 
 		return "admin/user-form";
 	}
@@ -154,17 +155,17 @@ public class AdminController {
 
 		userService.addUser(username, fullname, email, password);
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 		model.addAttribute("users", userService.getAllUsers());
 
-		return "redirect:" + WebRequestUtils.getContext() + "/admin/users";
+		return "redirect:" + ThingsAppProperties.getContext() + "/admin/users";
 	}
 
 	@RequestMapping(value = { "/admin/user/edit" }, method = RequestMethod.GET)
 	public String editUser(Model model, HttpServletRequest request) {
 		LOGGER.trace("## ADMIN USER - EDIT 1");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 
 		LOGGER.debug("userId: {}", request.getParameter("userId"));
 		User user = userService.findById(Long.parseLong(request.getParameter("userId")));
@@ -177,7 +178,7 @@ public class AdminController {
 	public String editUserPost(Model model, HttpServletRequest request) {
 		LOGGER.trace("## ADMIN USER - EDIT 2");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 
 		LOGGER.debug("userId: {}", request.getParameter("userId"));
 		User user = userService.findById(Long.parseLong(request.getParameter("userId")));
@@ -194,10 +195,10 @@ public class AdminController {
 
 		userService.save(user);
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 		model.addAttribute("users", userService.getAllUsers());
 
-		return "redirect:" + WebRequestUtils.getContext() + "/admin/users";
+		return "redirect:" + ThingsAppProperties.getContext() + "/admin/users";
 	}
 
 }

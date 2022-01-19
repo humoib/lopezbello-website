@@ -17,8 +17,8 @@ import lombok.Setter;
 public class ThingType {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "TTY_ID", length = 20, nullable = false)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "TTY_ID", length = 20)
 	private Long id;
 
 	@Column(name = "TTY_NAME", length = 50, nullable = false)

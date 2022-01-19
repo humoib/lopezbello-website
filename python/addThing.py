@@ -22,5 +22,10 @@ if sys.argv and sys.argv[1]=='place':
 	response = requests.post(url, auth=HTTPBasicAuth('bruno', 't0ledo'), json = myobj)
 	print("ADD THING: "+ str(response.status_code) + " "+ str(response.ok));
 
+if sys.argv and sys.argv[1]=='person':
+        myobj = {'boxKey': 'MYWORLD', 'thingTypeId': 6, \
+                'summary': ''+sys.argv[2] };
+        response = requests.post(url, auth=HTTPBasicAuth('bruno', 't0ledo'), json = myobj)
+        print("ADD THING: "+ str(response.status_code) + " "+ str(response.ok));
 
 print('# DONE');

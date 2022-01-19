@@ -86,7 +86,7 @@ public class CustomFieldsService {
 		// Get the field Object
 		List<CustomFieldReduced> fields = customFieldRepository.findByName(fieldName);
 		for (CustomFieldReduced field : fields) {
-			LOGGER.debug("findByName -> FIELD --SEARCHED--: name: {}", field.getName());
+			LOGGER.debug("findByName -> FIELD --SEARCHED--: name: {}", field.get_name());
 		}
 		if (fields.size() > 1) {
 			LOGGER.warn("Campo repetido para este asunto {}", fieldName);

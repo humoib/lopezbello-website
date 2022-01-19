@@ -14,8 +14,8 @@ import lombok.Setter;
 public class CustomFieldLargeValue {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "CFLV_ID", length = 20, nullable = false)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "CFLV_ID", length = 20)
 	private Long id;
 
 	@OneToOne

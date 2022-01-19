@@ -18,8 +18,16 @@ import lombok.Setter;
 public class Thing {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "THI_ID", length = 20, nullable = false)
+	
+	
+	@GeneratedValue(generator="SEQUENCE_GENERATOR", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name="SEQUENCE_GENERATOR",sequenceName="SEQ_THI_ID", allocationSize=100)
+    
+	//@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	//@SequenceGenerator(name = "SEQ_THI_ID", sequenceName = "SEQ_THI_ID", allocationSize = 1)
+	
+	// @GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Column(name = "THI_ID", length = 20, nullable = true)
 	private Long id;
 
 	@ManyToOne(optional = false, cascade = CascadeType.REFRESH)

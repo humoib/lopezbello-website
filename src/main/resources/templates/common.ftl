@@ -106,6 +106,10 @@
 					<!-- active --> <a class="nav-link" href="${context}/garage"><@spring.message code="boxes"/></a>
 					<!--  <span class="sr-only">(current)</span> -->
 			</li>
+				<!--li class="nav-item "><a class="nav-link"
+					href="${context}/gothings"><@spring.message code="Things"/></span>
+				</a> <span class="sr-only">(current) </li-->
+
 				<li class="nav-item "><a class="nav-link"
 					href="${context}/things"><@spring.message code="Things"/></span>
 				</a> <span class="sr-only">(current) </li>

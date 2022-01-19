@@ -17,8 +17,8 @@ import lombok.Setter;
 public class Workflow {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "WFL_ID", length = 20, nullable = false)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "WFL_ID", length = 20)
 	private Long id;
 
 	@Column(name = "WFL_NAME", length = 500, nullable = false)

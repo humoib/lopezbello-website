@@ -17,8 +17,8 @@ import lombok.Setter;
 public class ThingAttachment {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ATT_ID", length = 20, nullable = false)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "ATT_ID", length = 20)
 	private Long id;
 
 	@ManyToOne(optional = false, cascade = CascadeType.ALL)

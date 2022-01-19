@@ -4,12 +4,12 @@ public interface CustomFieldValueReduced {
 
 	String getId();
 
-	String getKey();
+	String get_key();
 
-	String getName();
+	String get_name();
 
-	String getType();
-	
-	String getValue();
+	String get_type();
+
+	String get_value();
 
 }

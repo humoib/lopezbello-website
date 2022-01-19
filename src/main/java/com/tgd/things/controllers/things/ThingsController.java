@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,12 +49,9 @@ import com.tgd.things.service.BoxService;
 import com.tgd.things.service.CustomFieldsService;
 import com.tgd.things.service.ThingCommentService;
 import com.tgd.things.service.ThingService;
-import com.tgd.things.service.ThingStatusService;
 import com.tgd.things.system.ThingsSystem;
 import com.tgd.things.utils.ThingUtils;
 import com.tgd.things.utils.ThingsProperties;
-import com.tgd.things.utils.WebRequestUtils;
-
 import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
@@ -76,9 +72,10 @@ public class ThingsController extends BaseController {
 	@Autowired
 	CustomFieldsService customFieldsService;
 
-	@RequestMapping(value = { "/things", "/things/{pageId}" }, method = RequestMethod.GET)
-	public String getThings(Model model, HttpServletRequest request, @PathVariable("pageId") Optional<Integer> pageId) {
-		LOGGER.debug("## GET Maincontroller: things");
+	@RequestMapping(value = { "/things", "/otro", "/gothings/{pageId}" }, method = RequestMethod.GET)
+	public String getThings(Model model, HttpServletRequest request,
+			@PathVariable(name = "pageId", required = false) Optional<Integer> pageId) {
+		LOGGER.trace("## GET Maincontroller: things");
 
 		Integer page = 0;
 		Pageable pageObject = null;
@@ -90,8 +87,8 @@ public class ThingsController extends BaseController {
 			page = 0;
 		}
 
-		LOGGER.debug("WebRequestUtils.getContext(): {}", WebRequestUtils.getContext());
-		model.addAttribute("context", WebRequestUtils.getContext());
+		LOGGER.debug("ThingsAppProperties.getContext(): {}", ThingsAppProperties.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 		request.getSession().setAttribute("contextpath", request.getContextPath());
 
 		// LOGGER.debug("Getting first 20 Things");
@@ -126,7 +123,7 @@ public class ThingsController extends BaseController {
 	public String searchPlaces(Model model, HttpServletRequest request, HttpServletResponse response) {
 		LOGGER.debug("POST ThingsController: search things");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 		model.addAttribute("search", request.getParameter("search"));
 		String searchString = request.getParameter("search");
 
@@ -145,12 +142,12 @@ public class ThingsController extends BaseController {
 		LOGGER.debug("## GET Maincontroller: showThing");
 
 		model.addAttribute("baseUrl", ThingsSystem.getBaseUrl());
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 
 		// TODO: review
 		// request.getSession().setAttribute("contextpath",
 		// request.getContextPath());
-		// model.addAttribute("context", WebRequestUtils.getContext());
+		// model.addAttribute("context", ThingsAppProperties.getContext());
 
 		Thing thing = null;
 		if (id != null && id.contains("-")) {
@@ -192,8 +189,8 @@ public class ThingsController extends BaseController {
 		// Fields
 		List<CustomFieldValueReduced> fields = customFieldsService.getAllFieldValuesFromThing(thing);
 		for (CustomFieldValueReduced field : fields) {
-			LOGGER.debug("FIELD ---> id: {} name: {} type: {} value: {}", field.getKey(), field.getName(),
-					field.getType(), field.getValue());
+			LOGGER.debug("FIELD ---> id: {} name: {} type: {} value: {}", field.get_key(), field.get_name(),
+					field.get_type(), field.get_value());
 		}
 		model.addAttribute("fields", fields);
 
@@ -209,6 +206,14 @@ public class ThingsController extends BaseController {
 		return THING_PAGE;
 	}
 
+	/**
+	 * addRelations
+	 * 
+	 * 
+	 * 
+	 * @param model
+	 * @param id
+	 */
 	private void addRelations(Model model, String id) {
 		// Relations
 		Optional<Thing> a = thingService.getThing(Long.parseLong(id));
@@ -253,7 +258,7 @@ public class ThingsController extends BaseController {
 	public String showNewThingSelectBox(Model model, HttpServletRequest request, HttpServletResponse response) {
 		LOGGER.debug("## GET ThingsController: show new thing");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 		model.addAttribute("operation", "new");
 
 		model.addAttribute("boxes", boxService.getAllBoxesWithThingTypes());
@@ -280,7 +285,7 @@ public class ThingsController extends BaseController {
 			@PathVariable String boxId, @PathVariable String thingTypeId) {
 		LOGGER.debug("## GET ThingsController: show new thing");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 		model.addAttribute("operation", "new");
 		model.addAttribute("boxId", boxId);
 		model.addAttribute("thingTypeId", thingTypeId);
@@ -294,7 +299,7 @@ public class ThingsController extends BaseController {
 				.getAllFieldsFromThingType(thingService.findThingTypeById(Long.parseLong(thingTypeId)));
 		LOGGER.debug("Fields: {}", fields);
 		for (CustomFieldReduced field : fields) {
-			LOGGER.debug("field: ---" + field.getId() + ":" + field.getName());
+			LOGGER.debug("field: ---" + field.getId() + ":" + field.get_name());
 		}
 		if (fields != null) {
 			model.addAttribute("fields", fields);
@@ -320,7 +325,7 @@ public class ThingsController extends BaseController {
 			HttpServletResponse response) {
 		LOGGER.debug("## POST ThingsController: add new thing");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 
 		LOGGER.debug("model -> name: {}", model.getAttribute("name"));
 		LOGGER.debug("req -> name: {}", request.getAttribute("name"));
@@ -345,6 +350,7 @@ public class ThingsController extends BaseController {
 		addThing.setAnalysis(request.getParameter("analysis"));
 		addThing.setThingTypeId(Long.parseLong(request.getParameter("thingTypeId")));
 		addThing.setCreated(new Date());
+		addThing.setUpdated(new Date());
 
 		LOGGER.debug("addThing: {}", addThing.toString());
 
@@ -374,7 +380,7 @@ public class ThingsController extends BaseController {
 			@PathVariable String id) {
 		LOGGER.debug("## GET ThingsController: edit thing");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 
 		Optional<Thing> thing = thingService.getThing(Long.parseLong(id));
 		LOGGER.debug("thing: {}", thing);
@@ -424,7 +430,7 @@ public class ThingsController extends BaseController {
 			@PathVariable String id) {
 		LOGGER.debug("## POST ThingsController: update thing");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 
 		LOGGER.debug("thingform: {}", thingform.toString());
 
@@ -448,6 +454,7 @@ public class ThingsController extends BaseController {
 		editThing.setSummary(request.getParameter("summary"));
 		editThing.setAnalysis(request.getParameter("analysis"));
 
+		editThing.setUpdated(new Date());
 		editThing.setDescription(request.getParameter("description"));
 
 		// status
@@ -509,7 +516,7 @@ public class ThingsController extends BaseController {
 		List<CustomFieldValueReduced> fields = customFieldsService.getAllFieldValuesFromThing(thingSaved);
 		model.addAttribute("fields", fields);
 
-		LOGGER.debug("WebRequestUtils.getContext(): " + WebRequestUtils.getContext());
+		LOGGER.debug("ThingsAppProperties.getContext(): " + ThingsAppProperties.getContext());
 		LOGGER.debug("---> " + "redirect:" + "/" + THINGS_PAGE);
 
 		return "redirect:" + "/" + THINGS_PAGE;
@@ -529,7 +536,7 @@ public class ThingsController extends BaseController {
 			HttpServletResponse response, @PathVariable String id) {
 		LOGGER.debug("## GET ThingsController: Delete thing");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 
 		LOGGER.debug("thingform: {}", thingform.toString());
 
@@ -573,7 +580,7 @@ public class ThingsController extends BaseController {
 			HttpServletResponse response) {
 		LOGGER.debug("## POST ThingsController: add new comment");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 
 		LOGGER.debug("model -> name: {}", model.getAttribute("name"));
 		LOGGER.debug("req -> name: {}", request.getAttribute("name"));
@@ -631,7 +638,7 @@ public class ThingsController extends BaseController {
 			@PathVariable String id) {
 		LOGGER.debug("## GET ThingsController: attach file to thing");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		model.addAttribute("context", ThingsAppProperties.getContext());
 
 		Optional<Thing> thing = thingService.getThing(Long.parseLong(id));
 		LOGGER.debug("thing: {}", thing);
@@ -655,7 +662,8 @@ public class ThingsController extends BaseController {
 			HttpServletResponse response, @RequestPart MultipartFile file2attach) {
 		LOGGER.debug("## POST ThingsController: attach file to thing");
 
-		model.addAttribute("context", WebRequestUtils.getContext());
+		// era WebRequestUtils
+		model.addAttribute("context", ThingsAppProperties.getContext());
 
 		LOGGER.debug("thingId: {}", request.getParameter("thingId"));
 		Long thingId = Long.parseLong(request.getParameter("thingId"));

@@ -20,7 +20,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
+import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
@@ -35,6 +37,10 @@ import com.tgd.things.config.ThingsAppProperties;
 // @ComponentScan("com.tgd.things")
 // @ComponentScan
 @Configuration
+
+//@EnableWebMvc
+//@EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
+
 public class ThingsAppApplication extends SpringBootServletInitializer {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ThingsAppApplication.class);
@@ -44,8 +50,8 @@ public class ThingsAppApplication extends SpringBootServletInitializer {
 
 	private static ApplicationContext applicationContext;
 
-	//@Value("${spring.profiles.active}")
-	//private String activeProfile;
+	// @Value("${spring.profiles.active}")
+	// private String activeProfile;
 
 	public static void main(String[] args) {
 		ConfigurableApplicationContext context = SpringApplication.run(ThingsAppApplication.class, args);

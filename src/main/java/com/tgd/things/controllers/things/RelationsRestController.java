@@ -30,7 +30,7 @@ public class RelationsRestController {
 	public ResponseEntity<?> relateThings(HttpServletRequest request, @RequestBody String payload) {
 		LOGGER.debug("## relateThings");
 
-		LOGGER.debug("payload " + payload);
+		LOGGER.debug("payload: {}", payload);
 
 		RelationPayload relation = new Gson().fromJson(payload, RelationPayload.class);
 

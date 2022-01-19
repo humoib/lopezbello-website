@@ -76,12 +76,12 @@ public final class FieldsManager {
 		List<CustomFieldReduced> fields = customFieldsService
 				.getAllFieldsFromThingType(thingService.findThingTypeById(myThing.getThingType().getId()));
 		for (CustomFieldReduced field : fields) {
-			LOGGER.debug("1 FIELD ---> id: {} name: {} type: {}", field.getKey(), field.getName(), field.getType());
+			LOGGER.debug("1 FIELD ---> id: {} name: {} type: {}", field.get_key(), field.get_name(), field.get_type());
 			String temp = request.getParameter("cf_" + field.getId());
 			LOGGER.debug("1 REQUEST PARAM {} value {}", "cf_" + field.getId(),
 					request.getParameter("cf_" + field.getId()));
 			if (temp != "") {
-				int ret = customFieldsService.updateValue(myThing, field.getName(), temp);
+				int ret = customFieldsService.updateValue(myThing, field.get_name(), temp);
 				LOGGER.debug("1 updated " + temp + " - ret:" + ret);
 			}
 		}
@@ -106,12 +106,12 @@ public final class FieldsManager {
 		List<CustomFieldReduced> fields = customFieldsService
 				.getAllFieldsFromThingType(this.thingService.findThingTypeById(myThing.getThingType().getId()));
 		for (CustomFieldReduced field : fields) {
-			LOGGER.debug("2 FIELD ---> id: {} name: {} type: {}", field.getKey(), field.getName(), field.getType());
-			String temp = (String) values.get(field.getName()); // ("cf_" +
-																// field.getId());
-			LOGGER.debug("2 REQUEST PARAM {} value {}", "cf_" + field.getId(), (String) values.get(field.getName()));
+			LOGGER.debug("2 FIELD ---> id: {} name: {} type: {}", field.get_key(), field.get_name(), field.get_type());
+			String temp = (String) values.get(field.get_name()); // ("cf_" +
+																	// field.getId());
+			LOGGER.debug("2 REQUEST PARAM {} value {}", "cf_" + field.getId(), (String) values.get(field.get_name()));
 			if (temp != "") {
-				int ret = customFieldsService.updateValue(myThing, field.getName(), temp);
+				int ret = customFieldsService.updateValue(myThing, field.get_name(), temp);
 				LOGGER.debug("2 updated " + temp + " - ret:" + ret);
 			}
 		}
