@@ -31,6 +31,7 @@ public class ThingUtils {
 		pojo.setAnalysis(thingDb.getAnalysis());
 
 		pojo.setCreated(thingDb.getCreated());
+		pojo.setUpdated(thingDb.getUpdated());
 		pojo.setCreator(thingDb.getCreator());
 
 		return pojo;
